@@ -474,6 +474,29 @@ html.focus .focusout{ display:flex !important }
 #reader[data-bg="dark"] .hl-w,#reader[data-bg="black"] .hl-w{background:rgba(160,145,255,.3)}
 #reader[data-bg="dark"] .hl-w.say,#reader[data-bg="black"] .hl-w.say{background:rgba(160,145,255,.62)}
 
+.pk{position:absolute}
+.pk.on{background:rgba(108,92,231,.3); border-radius:2px}
+.sv{position:absolute; border-radius:2px; mix-blend-mode:multiply}
+.sv.y{background:rgba(255,214,64,.55)}
+.sv.g{background:rgba(93,222,151,.5)}
+.sv.b{background:rgba(120,190,255,.5)}
+.sv.p{background:rgba(255,150,200,.5)}
+#reader[data-bg="dark"] .sv,#reader[data-bg="black"] .sv{mix-blend-mode:screen; opacity:.5}
+#rdDrag{position:fixed; z-index:72; border:2px solid var(--violet);
+  background:rgba(108,92,231,.14); border-radius:3px; pointer-events:none; display:none}
+#reader.hlmode .rd-stage{cursor:crosshair}
+#reader.hlmode .rd-nav{display:none}
+#rdHLBtn[aria-pressed="true"]{background:var(--violet); color:#fff}
+.hlhint{position:fixed; left:50%; transform:translateX(-50%);
+  top:calc(env(safe-area-inset-top,0px) + 58px); z-index:72;
+  background:var(--navy-2); color:#fff; border-radius:99px; padding:7px 14px;
+  font-size:12.5px; font-weight:650; box-shadow:0 6px 20px rgba(0,0,0,.35);
+  display:none; max-width:calc(100vw - 28px); text-align:center}
+.hlhint.on{display:block}
+.hlswatch{width:12px; height:38px; border-radius:99px; flex:0 0 12px; align-self:center}
+.hlswatch.y{background:#ffd640} .hlswatch.g{background:#5dde97}
+.hlswatch.b{background:#78beff} .hlswatch.p{background:#ff96c8}
+
 #player{
   position:fixed; right:12px; bottom:calc(env(safe-area-inset-bottom,0px) + 112px);
   z-index:74; width:min(272px, calc(100vw - 24px));
@@ -678,9 +701,9 @@ window.addEventListener("error", function(e){ window.__bvError = String(e.messag
 setTimeout(function(){
   var s = document.getElementById("screen");
   if(s && !s.children.length){
-    s.innerHTML = '<div class="empty"><div class="big">ðŸ˜•</div>'
+    s.innerHTML = '<div class="empty"><div class="big">😕</div>'
       + '<h2>BookVault did not start</h2>'
-      + '<p>Something in the app failed to load. Your saved books are untouched â€” '
+      + '<p>Something in the app failed to load. Your saved books are untouched — '
       + 'closing this and opening it again usually fixes it.</p>'
       + (window.__bvError ? '<p class="hint" style="font-family:monospace;font-size:11px">'
           + String(window.__bvError).replace(/[<>&]/g,"") + '</p>' : '')
@@ -711,24 +734,24 @@ setTimeout(function(){
       <b>Book<em>Vault</em></b>
     </span>
     <button class="iconbtn" data-act="tab" data-id="find" aria-label="Search everything"
-      title="Search everything">ðŸ”</button>
+      title="Search everything">🔍</button>
     <button class="iconbtn" data-act="tab" data-id="badge" aria-label="Achievements"
-      title="Achievements">ðŸ†</button>
+      title="Achievements">🏆</button>
     <span class="netpill" id="netPill"><i></i><span class="nettext">Online</span></span>
-    <button class="iconbtn" id="themeBtn" aria-label="Switch between light and dark">ðŸŒ™</button>
+    <button class="iconbtn" id="themeBtn" aria-label="Switch between light and dark">🌙</button>
   </header>
 
   <main id="screen" role="main"></main>
 
   <nav id="tabs" role="tablist" aria-label="Main">
-    <button class="tab" data-tab="home"  role="tab"><i>ðŸ </i>Home</button>
-    <button class="tab" data-tab="lib"   role="tab"><i>ðŸ“š</i>Library</button>
-    <button class="tab" data-tab="disc"  role="tab"><i>ðŸŒ</i>Free</button>
-    <button class="tab" data-tab="add"   role="tab"><i>âž•</i>Add</button>
-    <button class="tab" data-tab="write" role="tab"><i>âœï¸</i>Write</button>
-    <button class="tab" data-tab="shelf" role="tab"><i>ðŸ—‚ï¸</i>Shelves</button>
-    <button class="tab" data-tab="marks" role="tab"><i>ðŸ”–</i>Marks</button>
-    <button class="tab" data-tab="set"   role="tab"><i>âš™ï¸</i>Settings</button>
+    <button class="tab" data-tab="home"  role="tab"><i>🏠</i>Home</button>
+    <button class="tab" data-tab="lib"   role="tab"><i>📚</i>Library</button>
+    <button class="tab" data-tab="disc"  role="tab"><i>🌍</i>Free</button>
+    <button class="tab" data-tab="add"   role="tab"><i>➕</i>Add</button>
+    <button class="tab" data-tab="write" role="tab"><i>✍️</i>Write</button>
+    <button class="tab" data-tab="shelf" role="tab"><i>🗂️</i>Shelves</button>
+    <button class="tab" data-tab="marks" role="tab"><i>🔖</i>Marks</button>
+    <button class="tab" data-tab="set"   role="tab"><i>⚙️</i>Settings</button>
   </nav>
 </div>
 
@@ -737,7 +760,7 @@ setTimeout(function(){
   <div id="sheet" tabindex="-1"></div>
 </div>
 
-<div id="toast"><i id="toastIcon">âœ…</i><span id="toastMsg"></span></div>
+<div id="toast"><i id="toastIcon">✅</i><span id="toastMsg"></span></div>
 
 <div id="reader" hidden></div>
 <div id="listen" hidden></div>
@@ -746,9 +769,11 @@ setTimeout(function(){
   <button class="sw g" data-act="hl-add" data-v="g" aria-label="Highlight green"></button>
   <button class="sw b" data-act="hl-add" data-v="b" aria-label="Highlight blue"></button>
   <button class="sw p" data-act="hl-add" data-v="p" aria-label="Highlight pink"></button>
-  <button data-act="hl-note" aria-label="Note on these words">ðŸ“</button>
-  <button data-act="hl-clear" aria-label="Remove the highlight">âœ•</button>
+  <button data-act="hl-note" aria-label="Note on these words">📝</button>
+  <button data-act="hl-clear" aria-label="Remove the highlight">✕</button>
 </div>
+<div id="rdDrag"></div>
+<div class="hlhint" id="hlHint">Drag across the words you want</div>
 <div id="player" hidden role="region" aria-label="Read for me player"></div>
 
 <!-- Hidden inputs. One takes any picture file, the other asks the phone for the
@@ -789,6 +814,11 @@ if(SELFTEST){
     fmtOf:fmtOf, paintChapCount:paintChapCount, liveMarks:liveMarks,
     remapPositions:remapPositions, readPrefs:readPrefs,
     searchState:function(){ return SQ; },
+    findWordRun:findWordRun, allHighlights:allHighlights,
+    highlightsAsText:highlightsAsText, setHLMode:setHLMode,
+    paintPageWords:paintPageWords, wordsInDrag:wordsInDrag,
+    rwords:function(v){ if(v !== undefined) RWORDS = v; return RWORDS; },
+    reader:function(){ return R; },
     wipeEverything:wipeEverything, deleteBook:deleteBook,
     openBookSheet:openBookSheet, arm:arm,
     settings:function(){ return S; },
@@ -808,7 +838,7 @@ if(SELFTEST){
       "position:fixed;left:0;right:0;top:0;z-index:9999;background:#b4232a;"
     + "color:#fff;font:600 13px/1.35 system-ui,sans-serif;padding:7px 12px;"
     + "text-align:center");
-    warn.textContent = "SELF-TEST MODE â€” this is a separate practice library. "
+    warn.textContent = "SELF-TEST MODE — this is a separate practice library. "
       + "Your real books are not here and are not being touched.";
     document.body.appendChild(warn);
   }catch(e){}
@@ -836,14 +866,14 @@ function openDB(){
         db = null;
         dbError = "BookVault was updated in another tab. Reload this one before "
                 + "writing anything else.";
-        toast("âš ï¸", "Updated in another tab â€” reload this one");
+        toast("⚠️", "Updated in another tab — reload this one");
       };
       db.onclose = function(){ db = null; };
       resolve(db);
     };
     rq.onerror = function(){
       dbError = "Storage is blocked. If you are in a private window, books "
-              + "cannot be saved â€” open the app in a normal window.";
+              + "cannot be saved — open the app in a normal window.";
       resolve(null);
     };
     rq.onblocked = function(){ dbError = "Close the app's other tabs and try again."; resolve(null); };
@@ -1034,35 +1064,35 @@ function greeting(){
 }
 
 var BADGES = [
-  {id:"first",   icon:"ðŸ“–", name:"First chapter",   want:1,
+  {id:"first",   icon:"📖", name:"First chapter",   want:1,
    tip:"Turn your first page", get:function(){ return totalPagesRead(); }},
-  {id:"week",    icon:"ðŸ”¥", name:"Week warrior",    want:7,
+  {id:"week",    icon:"🔥", name:"Week warrior",    want:7,
    tip:"Read on 7 different days", get:function(){ return daysReadCount(); }},
-  {id:"month",   icon:"ðŸŒ™", name:"Thirty days",     want:30,
+  {id:"month",   icon:"🌙", name:"Thirty days",     want:30,
    tip:"Read on 30 different days", get:function(){ return daysReadCount(); }},
-  {id:"hundred", icon:"ðŸ’¯", name:"Hundred days",    want:100,
+  {id:"hundred", icon:"💯", name:"Hundred days",    want:100,
    tip:"Read on 100 different days", get:function(){ return daysReadCount(); }},
-  {id:"p100",    icon:"ðŸ“„", name:"Hundred pages",   want:100,
+  {id:"p100",    icon:"📄", name:"Hundred pages",   want:100,
    tip:"Turn 100 pages", get:function(){ return totalPagesRead(); }},
-  {id:"p1000",   icon:"ðŸ“š", name:"Thousand pages",  want:1000,
+  {id:"p1000",   icon:"📚", name:"Thousand pages",  want:1000,
    tip:"Turn 1,000 pages", get:function(){ return totalPagesRead(); }},
-  {id:"finish1", icon:"âœ…", name:"The end",         want:1,
+  {id:"finish1", icon:"✅", name:"The end",         want:1,
    tip:"Finish a book", get:function(){ return BOOKS.filter(isDone).length; }},
-  {id:"finish5", icon:"ðŸ…", name:"Five finished",   want:5,
+  {id:"finish5", icon:"🏅", name:"Five finished",   want:5,
    tip:"Finish 5 books", get:function(){ return BOOKS.filter(isDone).length; }},
-  {id:"shelf25", icon:"ðŸ—„ï¸", name:"Book collector",  want:25,
+  {id:"shelf25", icon:"🗄️", name:"Book collector",  want:25,
    tip:"Have 25 books", get:function(){ return BOOKS.length; }},
-  {id:"kinds",   icon:"ðŸŒ", name:"Explorer",        want:4,
-   tip:"Have books of 4 kinds â€” scanned, free, imported, written",
+  {id:"kinds",   icon:"🌍", name:"Explorer",        want:4,
+   tip:"Have books of 4 kinds — scanned, free, imported, written",
    get:function(){ var k = {}; BOOKS.forEach(function(b){ k[fmtOf(b)] = 1; });
                    return Object.keys(k).length; }},
-  {id:"wrote",   icon:"âœï¸", name:"Author",          want:1,
+  {id:"wrote",   icon:"✍️", name:"Author",          want:1,
    tip:"Write a book of your own",
    get:function(){ return BOOKS.filter(function(b){
      return b.source === "written" && (b.wordCount||0) > 50; }).length; }},
-  {id:"noted",   icon:"ðŸ“", name:"Note taker",      want:10,
+  {id:"noted",   icon:"📝", name:"Note taker",      want:10,
    tip:"Keep 10 notes", get:function(){ return liveNotes().length; }},
-  {id:"marked",  icon:"ðŸ”–", name:"Marker",          want:10,
+  {id:"marked",  icon:"🔖", name:"Marker",          want:10,
    tip:"Save 10 bookmarks",
    get:function(){ return BOOKS.reduce(function(a,b){ return a+liveMarks(b).length; }, 0); }}
 ];
@@ -1348,7 +1378,7 @@ function applyTheme(){
   var m = document.querySelector('meta[name="theme-color"]');
   if(m) m.setAttribute("content", want === "dark" ? "#0c1020" : "#f6f7fb");
   var b = document.getElementById("themeBtn");
-  if(b) b.textContent = want === "dark" ? "â˜€ï¸" : "ðŸŒ™";
+  if(b) b.textContent = want === "dark" ? "☀️" : "🌙";
 }
 if(window.matchMedia){
   try{
@@ -1379,15 +1409,15 @@ function paintNet(){
 var wasOnline = navigator.onLine !== false;
 window.addEventListener("online", function(){
   paintNet();
-  if(!wasOnline) toast("ðŸ“¶", "Back online");
+  if(!wasOnline) toast("📶", "Back online");
   wasOnline = true;
   render();
 });
 window.addEventListener("offline", function(){
   paintNet();
   var ready = offlineReady();
-  toast("âœˆï¸", ready
-    ? "You're offline â€” your " + ready + " saved book" + (ready===1?" is":"s are") + " ready to read"
+  toast("✈️", ready
+    ? "You're offline — your " + ready + " saved book" + (ready===1?" is":"s are") + " ready to read"
     : "You're offline. Books you add now still save to this device.");
   wasOnline = false;
   render();
@@ -1422,7 +1452,7 @@ function render(){
     else if(tab === "marks") html = viewMarks();
     else if(tab === "set")   html = viewSettings();
   }catch(e){
-    html = '<div class="empty"><div class="big">âš ï¸</div><h2>That screen did not open</h2>'
+    html = '<div class="empty"><div class="big">⚠️</div><h2>That screen did not open</h2>'
          + '<p class="hint">' + esc(String(e && e.message || e)) + '</p></div>';
   }
   el.innerHTML = html;
@@ -1462,7 +1492,7 @@ function coverHTML(b, opts){
     + (b.cover
         ? '<img data-pg="' + esc(b.cover) + '" alt="" style="' + rotCSS(b.coverRot) + '">'
         : '<span class="initial">' + initial + '</span>')
-    + (b.fav ? '<span class="fav">â­</span>' : '')
+    + (b.fav ? '<span class="fav">⭐</span>' : '')
     + (o.noPill ? '' : '<span class="pill">' + (total ? total + "p" : "empty") + '</span>')
     + (o.noPill ? '' : '<span class="fmt">' + fmtOf(b) + '</span>')
     + (p > 0 && p < 100 ? '<span class="prog"><i style="width:' + p + '%"></i></span>' : '')
@@ -1484,7 +1514,7 @@ function bookRowHTML(b){
     +   '<span class="m"><span>' + total + ' page' + (total===1?"":"s") + '</span>'
     +     (total ? '<span>' + p + '% read</span>' : '')
     +     '<span>' + esc(ago(b.opened)) + '</span></span></span>'
-    + '<span class="go">â€º</span></button>';
+    + '<span class="go">›</span></button>';
 }
 function statusLabel(b){
   if(isDone(b)) return "Finished";
@@ -1524,22 +1554,22 @@ function paintSide(){
     +     'color:var(--violet)">Vault</em></b>'
     +   '<p class="sub">your reading space</p></span>'
     + '</div>'
-    + item("home", "ðŸ“Š", "Dashboard")
-    + item("lib",  "ðŸ“š", "My library", BOOKS.length)
-    + item("write","âœï¸", "Write")
-    + item("marks","ðŸ”–", "Bookmarks",
+    + item("home", "📊", "Dashboard")
+    + item("lib",  "📚", "My library", BOOKS.length)
+    + item("write","✍️", "Write")
+    + item("marks","🔖", "Bookmarks",
         BOOKS.reduce(function(a,b){ return a + liveMarks(b).length; }, 0))
     + '<div class="sd-head">Libraries</div>'
-    + item("lib", "ðŸ“·", "Scanned", scanned)
-    + item("disc","ðŸŒ", "Free books", free)
-    + item("lib", "ðŸ“„", "Imported", imported)
-    + item("write","âœ’ï¸", "Written by me", written)
+    + item("lib", "📷", "Scanned", scanned)
+    + item("disc","🌍", "Free books", free)
+    + item("lib", "📄", "Imported", imported)
+    + item("write","✒️", "Written by me", written)
     + '<div class="sd-head">Collections</div>'
-    + item("shelf","ðŸ—‚ï¸", "Shelves", allShelves().length)
-    + item("lib",  "â­", "Favourites", countBy(function(b){ return b.fav; }))
+    + item("shelf","🗂️", "Shelves", allShelves().length)
+    + item("lib",  "⭐", "Favourites", countBy(function(b){ return b.fav; }))
     + '<div class="sd-head">More</div>'
-    + item("add", "âž•", "Add a book")
-    + item("set", "âš™ï¸", "Settings");
+    + item("add", "➕", "Add a book")
+    + item("set", "⚙️", "Settings");
 }
 
 function fmtOf(b){
@@ -1573,7 +1603,7 @@ function viewHome(){
   });
   var cur = reading[0] || null;
 
-  h += '<div class="hello"><span>âœ¨</span><h1>' + greeting() + ', '
+  h += '<div class="hello"><span>✨</span><h1>' + greeting() + ', '
     + esc(S.who || "reader") + '</h1></div>';
 
   var streak = streakDays(), best = bestStreak(), week = last7();
@@ -1583,7 +1613,7 @@ function viewHome(){
 
   h += '<div class="dash">';
 
-  h += '<div class="dcard"><h4><i>ðŸ”¥</i>Reading streak</h4><div class="dmid">'
+  h += '<div class="dcard"><h4><i>🔥</i>Reading streak</h4><div class="dmid">'
     + '<span class="dbig">' + streak + '</span>'
     + '<span class="dsub">' + (streak === 1 ? "day" : "days") + ' in a row</span>'
     + '<span class="dsub">' + (best ? "Best: " + best + " days" : "turn a page to start")
@@ -1593,7 +1623,7 @@ function viewHome(){
       }).join("") + '</span>'
     + '<span class="dsub">last 7 days</span></div></div>';
 
-  h += '<div class="dcard"><h4><i>ðŸ“–</i>Currently reading</h4>';
+  h += '<div class="dcard"><h4><i>📖</i>Currently reading</h4>';
   if(reading.length){
     h += reading.slice(0, 2).map(function(b){
       var p = pct(b);
@@ -1604,7 +1634,7 @@ function viewHome(){
         + '<span style="min-width:0"><span style="display:block;font-size:12px;'
         +   'font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'
         +   esc(b.title||"Untitled") + '</span>'
-        + '<span class="dsub" style="margin:2px 0 4px">' + esc(b.author||"â€”") + '</span>'
+        + '<span class="dsub" style="margin:2px 0 4px">' + esc(b.author||"—") + '</span>'
         + '<span class="dna-bar"><i style="width:' + p + '%;background:var(--violet)"></i></span>'
         + '</span></button>';
     }).join("");
@@ -1614,14 +1644,14 @@ function viewHome(){
   }
   h += '</div>';
 
-  h += '<div class="dcard"><h4><i>ðŸŽ¯</i>Reading goal ' + new Date().getFullYear() + '</h4>'
+  h += '<div class="dcard"><h4><i>🎯</i>Reading goal ' + new Date().getFullYear() + '</h4>'
     + '<div class="dmid">' + ringHTML(doneY, goal)
     + '<span class="dsub" style="margin-top:7px">of ' + goal + ' books</span>'
     + '<span class="dsub">' + (goal ? Math.round(doneY/goal*100) : 0) + '% complete</span>'
     + '<button class="btn ghost sm" data-act="set-goal" style="margin-top:8px">Change</button>'
     + '</div></div>';
 
-  h += '<div class="dcard"><h4><i>ðŸ§¬</i>Reading DNA</h4>';
+  h += '<div class="dcard"><h4><i>🧬</i>Reading DNA</h4>';
   if(everRead >= 2 && BOOKS.length){
     var avgPages = Math.round(BOOKS.reduce(function(a,b){ return a + (b.pages||[]).length; }, 0)
                    / BOOKS.length);
@@ -1656,28 +1686,28 @@ function viewHome(){
       + (lenFrom
           ? dnaRow("Length", avgRead > 120 ? "Long" : avgRead > 40 ? "Middling" : "Short",
                    Math.min(100, avgRead/2), "#e8734a")
-          : dnaRow("Length", "â€”", 0, "#e8734a"))
+          : dnaRow("Length", "—", 0, "#e8734a"))
       + dnaRow("Variety", variety >= 4 ? "Eclectic" : variety >= 2 ? "Mixed" : "Focused",
                variety*25, "#2bb3c0")
       + dnaRow("Rhythm", rhythm >= 60 ? "Steady" : rhythm >= 25 ? "On and off" : "Now and then",
                rhythm, "#8b7cf0")
-      + dnaRow("Time", favouriteHour() || "â€”", timePct, "#f2b33d")
+      + dnaRow("Time", favouriteHour() || "—", timePct, "#f2b33d")
       + dnaRow("Pace", perDay >= 30 ? "Quick" : perDay >= 10 ? "Steady" : "Gentle",
                Math.min(100, perDay*3), "#d94f8a")
       + '</div>'
-      + '<span class="dsub" style="text-align:center">from your own reading â€” '
+      + '<span class="dsub" style="text-align:center">from your own reading — '
       + daysRead + ' day' + (daysRead===1?"":"s") + ' recorded, '
       + last30 + ' of the last 30'
-      + (lenFrom ? '' : '. â€œLengthâ€ needs a book you have actually read into')
+      + (lenFrom ? '' : '. “Length” needs a book you have actually read into')
       + '</span>';
   } else {
     h += '<div class="dmid"><span class="dsub">Read on a couple of days and this '
-      + 'fills in. It is worked out from what you actually read â€” so there is '
+      + 'fills in. It is worked out from what you actually read — so there is '
       + 'nothing to show yet.</span></div>';
   }
   h += '</div>';
 
-  h += '<div class="dcard"><h4><i>ðŸ…</i>This month</h4><div class="dmid">'
+  h += '<div class="dcard"><h4><i>🏅</i>This month</h4><div class="dmid">'
     + '<span class="dsub" style="font-weight:800;color:var(--ink);font-size:13px">'
     +   'Page turner</span>'
     + '<span class="dsub" style="margin-bottom:9px">Read ' + n(monthGoal)
@@ -1692,9 +1722,9 @@ function viewHome(){
 
   if(!navigator.onLine){
     var ready = offlineReady();
-    h += '<div class="note warn" style="margin-bottom:16px"><span class="ic">âœˆï¸</span>'
+    h += '<div class="note warn" style="margin-bottom:16px"><span class="ic">✈️</span>'
       + '<span><b>You\'re offline.</b> ' + (ready
-          ? "Don't worry â€” your " + ready + " saved book" + (ready===1?" is":"s are")
+          ? "Don't worry — your " + ready + " saved book" + (ready===1?" is":"s are")
             + " ready to read."
           : "Nothing is saved on this device yet, so there is nothing to open.")
       + '</span></div>';
@@ -1710,7 +1740,7 @@ function viewHome(){
       +     '<span class="a">' + esc(cur.author || "Unknown author") + '</span>'
       +     '<span class="bar"><i style="width:' + p + '%"></i></span>'
       +     '<span class="pc">Page ' + ((cur.last||0)+1) + ' of ' + total
-      +       ' Â· ' + p + '% Â· ' + esc(ago(cur.opened)) + '</span></span>'
+      +       ' · ' + p + '% · ' + esc(ago(cur.opened)) + '</span></span>'
       + '</button></div>';
   }
 
@@ -1721,8 +1751,8 @@ function viewHome(){
       + '<span class="cnt">' + (everOpened.length > recent.length
           ? recent.length + " of " + everOpened.length : recent.length) + '</span>'
       + '<span class="arrows">'
-      +   '<button data-act="row-left" data-id="rowRecent" aria-label="Scroll left">â€¹</button>'
-      +   '<button data-act="row-right" data-id="rowRecent" aria-label="Scroll right">â€º</button>'
+      +   '<button data-act="row-left" data-id="rowRecent" aria-label="Scroll left">‹</button>'
+      +   '<button data-act="row-right" data-id="rowRecent" aria-label="Scroll right">›</button>'
       + '</span>'
       + '<button class="linkbtn" data-act="tab" data-id="lib">All books</button></div>'
       + '<div class="shelf" id="rowRecent">' + recent.map(bookCardHTML).join("") + '</div></div>';
@@ -1745,22 +1775,22 @@ function viewHome(){
     + '<div class="stats" style="margin-top:10px">'
     +   '<div class="stat"><b>' + n(readPages) + '</b><span>Pages turned</span></div>'
     +   '<div class="stat"><b>' + n(writtenWords) + '</b><span>Words written</span></div>'
-    +   '<div class="stat"><b>' + (estimate && estimate.usage != null ? kb(estimate.usage) : "â€”")
+    +   '<div class="stat"><b>' + (estimate && estimate.usage != null ? kb(estimate.usage) : "—")
     +     '</b><span>Storage, about</span></div>'
     +   '<div class="stat"><b>' + (S.backupAt ? ago(S.backupAt) : "never")
     +     '</b><span>Last backup</span></div>'
     + '</div>'
-    + '<p class="hint" style="margin-top:9px">â€œPages turnedâ€ counts only pages '
-    + 'that actually turned while you were reading â€” it is not worked out from '
-    + 'how far through a book you are. â€œFinishedâ€ means you marked it finished, '
+    + '<p class="hint" style="margin-top:9px">“Pages turned” counts only pages '
+    + 'that actually turned while you were reading — it is not worked out from '
+    + 'how far through a book you are. “Finished” means you marked it finished, '
     + 'or you read to the end. '
     + (storedPages == null
-        ? 'Pages â€œlistedâ€ is what your books say they have; Settings â†’ Check the '
+        ? 'Pages “listed” is what your books say they have; Settings → Check the '
           + 'library counts what is really stored.'
-        : 'Pages â€œstoredâ€ is counted from storage itself, not from what the books '
+        : 'Pages “stored” is counted from storage itself, not from what the books '
           + 'claim.')
     + (estimate && estimate.usage != null
-        ? ' The storage figure is the browserâ€™s own estimate and can cover more '
+        ? ' The storage figure is the browser’s own estimate and can cover more '
           + 'than BookVault alone.'
         : '')
     + '</p></div>';
@@ -1768,15 +1798,15 @@ function viewHome(){
   var ready2 = BOOKS.filter(function(b){ return (b.pages||[]).length; });
   h += '<div class="section"><div class="sechead"><h3>Ready offline</h3></div>'
     + (ready2.length
-        ? '<div class="note ok"><span class="ic">âœ…</span><span><b>'
+        ? '<div class="note ok"><span class="ic">✅</span><span><b>'
           + ready2.length + ' book' + (ready2.length===1?"":"s") + ' saved on this device.</b> '
-          + 'Their pages are stored here, so they open with no internet â€” on a plane, '
+          + 'Their pages are stored here, so they open with no internet — on a plane, '
           + 'on the bus, anywhere.</span></div>'
-        : '<div class="note warn"><span class="ic">âš ï¸</span><span><b>No pages saved yet.</b> '
+        : '<div class="note warn"><span class="ic">⚠️</span><span><b>No pages saved yet.</b> '
           + 'A book only works offline once its pages are actually on this device.</span></div>');
 
   h += '<div class="section"><button class="btn" data-act="tab" data-id="add">'
-    + 'ðŸ“¸ Add a book</button></div>';
+    + '📸 Add a book</button></div>';
   return h;
 }
 
@@ -1785,14 +1815,14 @@ function firstRunHTML(){
     + '<h1>Your books. Anywhere.<br>Even offline.</h1>'
     + '<p class="sub">Photograph the pages of a book you own, and BookVault keeps them '
     + 'on this device so you can read them with no internet at all.</p>'
-    + '<div class="empty"><div class="big">ðŸ“š</div>'
+    + '<div class="empty"><div class="big">📚</div>'
     +   '<h2>Nothing here yet</h2>'
     +   '<p>Start by photographing a few pages, or picking pictures you have already '
     +   'taken. You can add more pages to a book whenever you like.</p>'
     +   '<button class="btn" data-act="tab" data-id="add" style="max-width:260px;margin:0 auto">'
-    +     'ðŸ“¸ Add your first book</button>'
+    +     '📸 Add your first book</button>'
     + '</div>'
-    + '<div class="note" style="margin-top:16px"><span class="ic">ðŸ”’</span>'
+    + '<div class="note" style="margin-top:16px"><span class="ic">🔒</span>'
     +   '<span><b>Nothing leaves this device.</b> There is no account, no sign-in and no '
     +   'server. Your photos are stored by the browser on this computer or phone only.'
     +   '</span></div>'
@@ -1835,10 +1865,10 @@ function viewLibrary(){
     + ' on this device.</p>';
 
   if(!BOOKS.length){
-    return h + '<div class="empty"><div class="big">ðŸ“š</div><h2>No books yet</h2>'
+    return h + '<div class="empty"><div class="big">📚</div><h2>No books yet</h2>'
       + '<p>Photograph the pages of a book you own and it will appear here.</p>'
       + '<button class="btn" data-act="tab" data-id="add" style="max-width:240px;margin:0 auto">'
-      + 'âž• Add a book</button></div>';
+      + '➕ Add a book</button></div>';
   }
 
   h += '<div class="toolbar">'
@@ -1859,11 +1889,11 @@ function viewLibrary(){
   var kinds = {};
   BOOKS.forEach(function(bb){ kinds[fmtOf(bb)] = (kinds[fmtOf(bb)]||0) + 1; });
   Object.keys(kinds).sort().forEach(function(kk){
-    filters.push(["fmt:" + kk, kk + " Â· " + kinds[kk]]);
+    filters.push(["fmt:" + kk, kk + " · " + kinds[kk]]);
   });
   allShelves().forEach(function(sh){
     var cnt = BOOKS.filter(function(bb){ return (bb.shelves||[]).indexOf(sh) >= 0; }).length;
-    if(cnt) filters.push(["shelf:" + sh, "ðŸ—‚ï¸ " + sh + " Â· " + cnt]);
+    if(cnt) filters.push(["shelf:" + sh, "🗂️ " + sh + " · " + cnt]);
   });
   h += '<div class="chips" style="margin-bottom:10px">'
     + filters.map(function(f){
@@ -1879,7 +1909,7 @@ function viewLibrary(){
 
   var list = shownBooks();
   if(!list.length){
-    return h + '<div class="empty"><div class="big">ðŸ”</div><h2>Nothing matches</h2>'
+    return h + '<div class="empty"><div class="big">🔍</div><h2>Nothing matches</h2>'
       + '<p>No book here fits that search and those filters.</p>'
       + '<button class="btn ghost" data-act="clear-filters" style="max-width:220px;margin:0 auto">'
       + 'Clear the filters</button></div>';
@@ -1913,34 +1943,34 @@ function viewShelves(){
         + 'Everything here is stored on this device.</p>';
 
   h += '<div class="row" style="margin-bottom:18px">'
-    + '<button class="btn ghost sm" data-act="new-shelf">âž• New shelf</button></div>';
+    + '<button class="btn ghost sm" data-act="new-shelf">➕ New shelf</button></div>';
 
   var groups = [
-    {k:"fav",  label:"â­ Favourites", list:BOOKS.filter(function(b){ return b.fav; })},
-    {k:"read", label:"ðŸ“– Reading now", list:BOOKS.filter(function(b){
+    {k:"fav",  label:"⭐ Favourites", list:BOOKS.filter(function(b){ return b.fav; })},
+    {k:"read", label:"📖 Reading now", list:BOOKS.filter(function(b){
         return (b.last||0) > 0 && !isDone(b); })},
-    {k:"want", label:"ðŸ•’ Want to read", list:BOOKS.filter(function(b){ return b.status==="want"; })},
-    {k:"done", label:"âœ… Finished", list:BOOKS.filter(isDone)}
+    {k:"want", label:"🕒 Want to read", list:BOOKS.filter(function(b){ return b.status==="want"; })},
+    {k:"done", label:"✅ Finished", list:BOOKS.filter(isDone)}
   ];
   groups.forEach(function(g){
     if(!g.list.length) return;
     h += '<div class="section"><div class="sechead"><h3>' + g.label
-      + ' Â· ' + g.list.length + '</h3></div>'
+      + ' · ' + g.list.length + '</h3></div>'
       + '<div class="shelf">' + g.list.map(bookCardHTML).join("") + '</div></div>';
   });
 
   var shelves = allShelves();
   shelves.forEach(function(name){
     var list = BOOKS.filter(function(b){ return (b.shelves||[]).indexOf(name) >= 0; });
-    h += '<div class="section"><div class="sechead"><h3>ðŸ—‚ï¸ ' + esc(name)
-      + ' Â· ' + list.length + '</h3>'
+    h += '<div class="section"><div class="sechead"><h3>🗂️ ' + esc(name)
+      + ' · ' + list.length + '</h3>'
       + '<button class="linkbtn" data-act="ren-shelf" data-id="' + esc(name) + '">Rename</button>'
       + '<button class="linkbtn" data-act="del-shelf" data-id="' + esc(name) + '">Remove shelf</button>'
       + '</div>'
       + (list.length
           ? '<div class="shelf">' + list.map(bookCardHTML).join("") + '</div>'
           : '<p class="hint">Nothing on this shelf yet. Open a book and use '
-            + 'â€œShelvesâ€ to put it here.</p>')
+            + '“Shelves” to put it here.</p>')
       + '</div>';
   });
 
@@ -1955,7 +1985,7 @@ function viewShelves(){
   }
 
   if(!groups.some(function(g){ return g.list.length; }) && !shelves.length && !tags.length){
-    h += '<div class="empty"><div class="big">ðŸ—‚ï¸</div><h2>No shelves yet</h2>'
+    h += '<div class="empty"><div class="big">🗂️</div><h2>No shelves yet</h2>'
       + '<p>Make a shelf, then open any book and add it. Favourites and reading '
       + 'status show up here automatically.</p></div>';
   }
@@ -1963,7 +1993,7 @@ function viewShelves(){
 }
 
 var MAX_PX = 1600;           /* long edge. A phone photo is ~4000px and a page
-                                does not read any better for it â€” it just eats
+                                does not read any better for it — it just eats
                                 four times the disk. */
 var JPEG_Q = 0.82;
 
@@ -2086,7 +2116,7 @@ function viewAdd(){
           + 'through it. Everything stays on this device.') + '</p>';
 
   if(dbError){
-    h += '<div class="note bad" style="margin-bottom:14px"><span class="ic">âš ï¸</span>'
+    h += '<div class="note bad" style="margin-bottom:14px"><span class="ic">⚠️</span>'
       + '<span><b>Nothing can be saved.</b> ' + esc(dbError) + '</span></div>';
   }
 
@@ -2101,23 +2131,23 @@ function viewAdd(){
   }
 
   h += '<div class="drop" id="drop">'
-    + '<div class="big">ðŸ“„</div>'
+    + '<div class="big">📄</div>'
     + '<h2 style="margin-top:8px">Add pages</h2>'
     + '<p class="hint" style="margin:6px 0 14px">Drag pictures here, or use a button. '
     + 'JPEG, PNG and WebP all work.</p>'
     + '<div class="row" style="justify-content:center">'
-    +   '<button class="btn sm" data-act="pick-files">ðŸ–¼ï¸ Choose pictures</button>'
-    +   '<button class="btn ghost sm" data-act="pick-camera">ðŸ“· Use the camera</button>'
-    +   '<button class="btn ghost sm" data-act="pick-video">ðŸŽ¥ From a video</button>'
-    +   '<button class="btn ghost sm" data-act="pick-doc">ðŸ“• PDF, EPUB or text</button>'
+    +   '<button class="btn sm" data-act="pick-files">🖼️ Choose pictures</button>'
+    +   '<button class="btn ghost sm" data-act="pick-camera">📷 Use the camera</button>'
+    +   '<button class="btn ghost sm" data-act="pick-video">🎥 From a video</button>'
+    +   '<button class="btn ghost sm" data-act="pick-doc">📕 PDF, EPUB or text</button>'
     + '</div>'
     + '<p class="hint" style="margin:12px 0 0">A video is stepped through frame by '
     + 'frame, the blurry ones dropped and repeats of the same page merged. It does '
-    + '<b>not</b> find the edges of the page or straighten it â€” use Crop for that. '
+    + '<b>not</b> find the edges of the page or straighten it — use Crop for that. '
     + 'PDFs need the internet the first time.</p></div>';
 
   if(!draft.pages.length){
-    h += '<div class="note" style="margin-top:16px"><span class="ic">ðŸ’¡</span>'
+    h += '<div class="note" style="margin-top:16px"><span class="ic">💡</span>'
       + '<span>Take the photos straight on, in good light, one page at a time. '
       + 'You can reorder, turn and crop them before the book is made.</span></div>';
     return h;
@@ -2126,7 +2156,7 @@ function viewAdd(){
   var dups = dupFlags();
   h += '<div class="section"><div class="sechead">'
     + '<h3>' + draft.pages.length + ' page' + (draft.pages.length===1?"":"s")
-    + ' Â· ' + kb(draftTotalBytes()) + '</h3>'
+    + ' · ' + kb(draftTotalBytes()) + '</h3>'
     + '<button class="linkbtn" data-act="clear-draft">Remove all</button></div>'
     + '<div class="pagegrid" id="pageGrid">'
     + draft.pages.map(function(p, i){
@@ -2141,11 +2171,11 @@ function viewAdd(){
                 + (dups[i] ? "possible repeat" : "looks blurry") + '</div>'
               : '')
           + '<div class="acts">'
-          +   '<button data-act="pg-left" data-i="' + i + '" title="Move earlier">â—€</button>'
-          +   '<button data-act="pg-rot" data-i="' + i + '" title="Turn">âŸ³</button>'
-          +   '<button data-act="pg-crop" data-i="' + i + '" title="Crop">â›¶</button>'
-          +   '<button data-act="pg-right" data-i="' + i + '" title="Move later">â–¶</button>'
-          +   '<button class="del" data-act="pg-del" data-i="' + i + '" title="Remove">ðŸ—‘</button>'
+          +   '<button data-act="pg-left" data-i="' + i + '" title="Move earlier">◀</button>'
+          +   '<button data-act="pg-rot" data-i="' + i + '" title="Turn">⟳</button>'
+          +   '<button data-act="pg-crop" data-i="' + i + '" title="Crop">⛶</button>'
+          +   '<button data-act="pg-right" data-i="' + i + '" title="Move later">▶</button>'
+          +   '<button class="del" data-act="pg-del" data-i="' + i + '" title="Remove">🗑</button>'
           + '</div></div>';
       }).join("")
     + '</div>'
@@ -2154,8 +2184,8 @@ function viewAdd(){
 
   if(tgt){
     h += '<div class="section"><button class="btn" data-act="append-pages">'
-      + 'âž• Add these ' + draft.pages.length + ' page'
-      + (draft.pages.length===1?"":"s") + ' to â€œ' + esc(tgt.title) + 'â€</button>'
+      + '➕ Add these ' + draft.pages.length + ' page'
+      + (draft.pages.length===1?"":"s") + ' to “' + esc(tgt.title) + '”</button>'
       + '<button class="btn quiet" data-act="cancel-target">Cancel</button></div>';
     return h;
   }
@@ -2189,7 +2219,7 @@ function viewAdd(){
     +   '</div></div>'
     + '</div>'
     + '<button class="btn" data-act="make-book" style="margin-top:14px">'
-    +   'ðŸ“š Create this book Â· ' + draft.pages.length + ' page'
+    +   '📚 Create this book · ' + draft.pages.length + ' page'
     +   (draft.pages.length===1?"":"s") + '</button>'
     + '</div>';
   return h;
@@ -2233,7 +2263,7 @@ function loadChapNames(b){
       document.querySelectorAll('[data-act="w-chap"]'), function(el){
         var i = +el.dataset.i, id = (b.pages||[])[i], nm = m[id];
         var label = (i+1) + (nm ? ". " + nm : "");
-        el.textContent = label.length > 24 ? label.slice(0, 23) + "â€¦" : label;
+        el.textContent = label.length > 24 ? label.slice(0, 23) + "…" : label;
         el.setAttribute("title", nm || ("Chapter " + (i+1)));
       });
   }).catch(function(){});
@@ -2295,7 +2325,7 @@ function paintChapCount(){
   if(!area || !out) return;
   var v = area.value || "";
   out.textContent = "this chapter: " + n(words(v)) + " word"
-    + (words(v)===1?"":"s") + " Â· " + n(v.length) + " letter"
+    + (words(v)===1?"":"s") + " · " + n(v.length) + " letter"
     + (v.length===1?"":"s");
 }
 function paintWriteGoal(){
@@ -2309,13 +2339,13 @@ function paintWriteGoal(){
     return;
   }
   var p = Math.max(0, Math.min(100, Math.round(done / goal * 100)));
-  lbl.textContent = n(done) + " of " + n(goal) + " words today Â· " + p + "%";
+  lbl.textContent = n(done) + " of " + n(goal) + " words today · " + p + "%";
   if(bar) bar.style.width = p + "%";
 }
 var saveTries = 0;
 function saveChapterSoon(){
   clearTimeout(W.saveT);
-  wMark("savingâ€¦");
+  wMark("saving…");
   W.saveT = setTimeout(saveChapterNow, 900);
 }
 function saveChapterNow(){
@@ -2346,7 +2376,7 @@ function saveChapterNow(){
       markFailed("chapter", pid);
       stashWriting();
       wMark("NOT SAVED");
-      toast("âš ï¸", "That chapter is missing from storage â€” keep this window open "
+      toast("⚠️", "That chapter is missing from storage — keep this window open "
                 + "and copy your words somewhere safe");
       return;
     }
@@ -2361,7 +2391,7 @@ function saveChapterNow(){
       if(!cur) return;
       noteWrote((cur.wordCount || 0) - wordsBefore);
       var wc = document.getElementById("wCount");
-      if(wc) wc.textContent = n(cur.wordCount) + " words Â· "
+      if(wc) wc.textContent = n(cur.wordCount) + " words · "
         + n(bookCharCount(cur)) + " letters";
       paintChapCount();
       paintWriteGoal();
@@ -2370,14 +2400,14 @@ function saveChapterNow(){
     stashWriting();
     markFailed("chapter", pid);
     var full = isFull(err);
-    wMark(full ? "NO ROOM â€” NOT SAVED" : "SAVE FAILED");
+    wMark(full ? "NO ROOM — NOT SAVED" : "SAVE FAILED");
     saveTries++;
     if(saveTries <= 2 && !full){
       clearTimeout(W.saveT);
       W.saveT = setTimeout(saveChapterNow, 1500 * saveTries);
-      toast("âš ï¸", "Save failed â€” trying again");
+      toast("⚠️", "Save failed — trying again");
     } else {
-      toast("âš ï¸", full
+      toast("⚠️", full
         ? "No room left on the device. Delete a book you have finished, then tap Save."
         : "Your writing is NOT being saved. Copy it somewhere safe before you close this.");
     }
@@ -2416,7 +2446,7 @@ function recountBook(b){
 function saveNoteSoon(){
   clearTimeout(W.saveT);
   var mark = document.getElementById("nSaved");
-  if(mark) mark.textContent = "savingâ€¦";
+  if(mark) mark.textContent = "saving…";
   W.saveT = setTimeout(saveNoteNow, 900);
 }
 function saveNoteNow(){
@@ -2435,9 +2465,9 @@ function saveNoteNow(){
     stashWriting();
     markFailed("note", nid);
     var mark = document.getElementById("nSaved");
-    if(mark) mark.textContent = isFull(err) ? "NO ROOM â€” NOT SAVED" : "SAVE FAILED";
-    toast("âš ï¸", isFull(err)
-      ? "No room left on the device â€” that note is not saved"
+    if(mark) mark.textContent = isFull(err) ? "NO ROOM — NOT SAVED" : "SAVE FAILED";
+    toast("⚠️", isFull(err)
+      ? "No room left on the device — that note is not saved"
       : "That note could not be saved");
   });
 }
@@ -2459,6 +2489,34 @@ function bookToText(b, asMarkdown){
     });
     return out;
   });
+}
+function copyToClipboard(text){
+  function fallback(){
+    try{
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      toast(ok ? "📋" : "⚠️", ok ? "Copied" : "This browser would not let me copy it");
+      return ok;
+    }catch(e){
+      toast("⚠️", "This browser would not let me copy it");
+      return false;
+    }
+  }
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text)
+        .then(function(){ toast("📋", "Copied"); })
+        .catch(function(){ fallback(); });
+      return;
+    }
+  }catch(e){}
+  fallback();
 }
 function saveText(name, text){
   if(hostSave){ saveViaHost(name, text, "text/plain;charset=utf-8"); return true; }
@@ -2505,7 +2563,7 @@ function stripHTML(html){
   doc.querySelectorAll("h1,h2,h3,h4,h5,h6")
     .forEach(function(n){ n.appendChild(doc.createTextNode("\n\n")); });
   var t = (doc.body.textContent || "");
-  return t.replace(/Â /g, " ").replace(/[ \t]+/g, " ")
+  return t.replace(/ /g, " ").replace(/[ \t]+/g, " ")
           .replace(/\n{3,}/g, "\n\n").trim();
 }
 function naturalSort(a, b){
@@ -2530,7 +2588,7 @@ function dSearch(){
   }).catch(function(e){
     D.state = "error";
     D.err = navigator.onLine === false
-      ? "You are offline. Finding new books needs the internet â€” the books already "
+      ? "You are offline. Finding new books needs the internet — the books already "
         + "in your library still open normally."
       : "Wikisource could not be reached. " + (e.message || "");
     render();
@@ -2591,14 +2649,14 @@ function makeCover(title, author){
 function dSave(){
   if(!D.pick) return;
   var picked = D.chapters.filter(function(c, i){ return D.chosen[i]; });
-  if(!picked.length){ toast("ðŸ“„", "Tick at least one chapter"); return; }
+  if(!picked.length){ toast("📄", "Tick at least one chapter"); return; }
   var title = D.pick.title;
   if(BOOKS.some(function(b){ return b.source === "wikisource" && b.sourceTitle === title; })){
-    toast("ðŸ“š", "That one is already in your library");
+    toast("📚", "That one is already in your library");
     return;
   }
   job.stop = false;
-  D.busy = "Fetching " + picked.length + " chapter" + (picked.length===1?"":"s") + "â€¦";
+  D.busy = "Fetching " + picked.length + " chapter" + (picked.length===1?"":"s") + "…";
   render();
 
   var id = uid(), ids = [], bytes = 0, i = 0, failed = 0;
@@ -2606,7 +2664,7 @@ function dSave(){
     if(job.stop || i >= picked.length){
       if(!ids.length){
         D.busy = ""; render();
-        toast("âš ï¸", "Nothing could be fetched");
+        toast("⚠️", "Nothing could be fetched");
         return;
       }
       var cov = makeCover(title, "");
@@ -2629,12 +2687,12 @@ function dSave(){
       }).then(loadBooks).then(function(){
         D.busy = ""; D.pick = null; D.state = "done";
         tab = "lib"; render(); refreshUsage();
-        toast("ðŸ“š", "â€œ" + title + "â€ saved â€” " + ids.length + " chapter"
+        toast("📚", "“" + title + "” saved — " + ids.length + " chapter"
           + (ids.length===1?"":"s") + (failed ? ", " + failed + " failed" : ""));
         setTimeout(function(){ openBookSheet(id); }, 250);
       }).catch(function(e){
         D.busy = ""; render();
-        toast("âš ï¸", "Could not save â€” " + (e.message || "storage failed"));
+        toast("⚠️", "Could not save — " + (e.message || "storage failed"));
       });
       return;
     }
@@ -2651,7 +2709,7 @@ function dSave(){
         .then(function(){
           ids.push(pid);
           i++;
-          D.busy = "Fetching chapter " + i + " of " + picked.length + "â€¦";
+          D.busy = "Fetching chapter " + i + " of " + picked.length + "…";
           var el = document.getElementById("dBusy");
           if(el) el.textContent = D.busy; else render();
           step();
@@ -2675,12 +2733,12 @@ function viewWrite(){
   if(W.sub === "notes") return h + notesListHTML();
 
   var mine = writtenBooks();
-  h += '<button class="btn" data-act="w-new-book">âœï¸ Create a book</button>';
+  h += '<button class="btn" data-act="w-new-book">✍️ Create a book</button>';
   if(!mine.length){
-    return h + '<div class="empty" style="margin-top:16px"><div class="big">âœï¸</div>'
+    return h + '<div class="empty" style="margin-top:16px"><div class="big">✍️</div>'
       + '<h2>Nothing written yet</h2>'
       + '<p>Write a story, a poem, a comic script or your school notes. Add chapters, '
-      + 'and read it back like any other book â€” it can even be read aloud to you.</p>'
+      + 'and read it back like any other book — it can even be read aloud to you.</p>'
       + '</div>' + backupNoteHTML();
   }
   h += '<div class="list" style="margin-top:16px">' + mine.map(function(b){
@@ -2701,12 +2759,12 @@ function viewWrite(){
   return h;
 }
 function backupNoteHTML(){
-  return '<div class="note warn" style="margin-top:18px"><span class="ic">ðŸ’¾</span>'
+  return '<div class="note warn" style="margin-top:18px"><span class="ic">💾</span>'
     + '<span><b>Your writing only exists here.</b> If this browser\'s data is cleared, '
-    + 'or the device is lost, it goes with it. Make a backup now and then â€” it is in '
+    + 'or the device is lost, it goes with it. Make a backup now and then — it is in '
     + 'Settings, and it saves a file you can keep.</span></div>'
     + '<button class="btn ghost" data-act="tab" data-id="set" style="margin-top:10px">'
-    + 'ðŸ’¾ Go to Backup</button>';
+    + '💾 Go to Backup</button>';
 }
 
 function viewBookEditor(){
@@ -2716,7 +2774,7 @@ function viewBookEditor(){
   if(W.chap >= total) W.chap = Math.max(0, total-1);
 
   var h = '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">'
-    + '<button class="btn ghost sm" data-act="w-close">â€¹ My books</button>'
+    + '<button class="btn ghost sm" data-act="w-close">‹ My books</button>'
     + '<span class="hint" id="wSaved" style="margin-left:auto">saved</span></div>';
 
   h += '<div class="card">'
@@ -2730,19 +2788,19 @@ function viewBookEditor(){
     +   '(optional)</span></label>'
     +   '<input id="wSub" type="text" maxlength="90" value="' + esc(b.subtitle||"") + '"></div>'
     + '<div class="field"><label for="wGenre">Kind of book</label>'
-    +   '<input id="wGenre" type="text" maxlength="40" placeholder="Story, poems, schoolâ€¦" '
+    +   '<input id="wGenre" type="text" maxlength="40" placeholder="Story, poems, school…" '
     +   'value="' + esc(b.genre||"") + '"></div>'
     + '<div class="field"><label for="wDesc">What is it about?</label>'
     +   '<textarea id="wDesc" maxlength="600" style="min-height:62px">'
     +   esc(b.desc||"") + '</textarea></div>'
     + '<div class="row" style="margin-top:10px">'
     +   '<button class="btn ghost sm" data-act="w-details">Save the details</button>'
-    +   '<button class="btn ghost sm" data-act="w-cover">ðŸŽ¨ Make a cover</button>'
+    +   '<button class="btn ghost sm" data-act="w-cover">🎨 Make a cover</button>'
     + '</div></div>';
 
   h += '<div class="section"><div class="sechead">'
-    + '<h3>Chapters Â· ' + total + '</h3>'
-    + '<span class="hint" id="wCount">' + n(bookWordCount(b)) + ' words Â· '
+    + '<h3>Chapters · ' + total + '</h3>'
+    + '<span class="hint" id="wCount">' + n(bookWordCount(b)) + ' words · '
     + n(bookCharCount(b)) + ' letters</span></div>'
     + '<div class="chips" style="margin-bottom:12px">'
     + (b.pages||[]).map(function(pid, i){
@@ -2750,7 +2808,7 @@ function viewBookEditor(){
         var label = (i+1) + (nm ? ". " + nm : "");
         return '<button class="chip tiny" data-act="w-chap" data-i="' + i
           + '" aria-pressed="' + (i===W.chap) + '" title="' + esc(nm || ("Chapter " + (i+1)))
-          + '">' + esc(label.length > 24 ? label.slice(0, 23) + "â€¦" : label)
+          + '">' + esc(label.length > 24 ? label.slice(0, 23) + "…" : label)
           + '</button>'; }).join("")
     + '<button class="chip tiny" data-act="w-add-chap">+ chapter</button>'
     + '</div>';
@@ -2767,13 +2825,13 @@ function viewBookEditor(){
     +   '<span class="hint" id="wChapCount" style="display:block;margin-top:6px"></span>'
     +   '</div>'
     + '<div class="row" style="margin-top:10px">'
-    +   '<button class="btn ghost sm" data-act="w-smaller">Aâˆ’</button>'
+    +   '<button class="btn ghost sm" data-act="w-smaller">A−</button>'
     +   '<button class="btn ghost sm" data-act="w-bigger">A+</button>'
-    +   '<button class="btn ghost sm" data-act="w-focus">ðŸ§˜ Focus</button>'
+    +   '<button class="btn ghost sm" data-act="w-focus">🧘 Focus</button>'
     +   '<button class="btn ghost sm" data-act="w-chap-left"'
-    +     (W.chap<=0?" disabled":"") + '>â—€ move</button>'
+    +     (W.chap<=0?" disabled":"") + '>◀ move</button>'
     +   '<button class="btn ghost sm" data-act="w-chap-right"'
-    +     (W.chap>=total-1?" disabled":"") + '>move â–¶</button>'
+    +     (W.chap>=total-1?" disabled":"") + '>move ▶</button>'
     +   '<button class="btn ghost sm danger" data-act="w-del-chap">Delete chapter</button>'
     + '</div>'
     + '<p class="hint" style="margin:10px 0 0">Moving or deleting a chapter takes '
@@ -2798,21 +2856,21 @@ function viewBookEditor(){
           + 'px;border-radius:3px;background:' + (v > 0 ? "var(--violet)" : "var(--line)")
           + ';opacity:' + (idx === 6 ? "1" : ".72") + '"></span>'; }).join("")
     + '</div>'
-    + '<span class="hint" style="display:block;margin-top:6px">the last 7 days Â· '
+    + '<span class="hint" style="display:block;margin-top:6px">the last 7 days · '
     + n(wroteTotal()) + ' words recorded in total</span>'
     + '<p class="hint" style="margin:9px 0 0">Counted from the day this was '
-    + 'added â€” there is no record of writing from before that, so none is '
+    + 'added — there is no record of writing from before that, so none is '
     + 'shown. Deleting words counts downwards.</p>'
     + '</div></div>';
 
   h += '<div class="section"><div class="sechead"><h3>When you are ready</h3></div>'
     + '<div class="row">'
-    + '<button class="btn sm" data-act="w-preview">ðŸ“– Read it</button>'
-    + '<button class="btn ghost sm" data-act="w-export-txt">â¬‡ Save as text</button>'
-    + '<button class="btn ghost sm" data-act="w-export-md">â¬‡ Save as Markdown</button>'
+    + '<button class="btn sm" data-act="w-preview">📖 Read it</button>'
+    + '<button class="btn ghost sm" data-act="w-export-txt">⬇ Save as text</button>'
+    + '<button class="btn ghost sm" data-act="w-export-md">⬇ Save as Markdown</button>'
     + '</div>'
     + '<button class="btn ghost danger" data-act="w-del-book" style="margin-top:12px">'
-    + 'ðŸ—‘ Delete this book</button></div>';
+    + '🗑 Delete this book</button></div>';
   return h;
 }
 
@@ -2822,7 +2880,7 @@ function notesListHTML(){
     return (nt.title||"").toLowerCase().indexOf(q) >= 0
         || (nt.body||"").toLowerCase().indexOf(q) >= 0; });
 
-  var h = '<button class="btn" data-act="w-new-note">ðŸ“ New note</button>'
+  var h = '<button class="btn" data-act="w-new-note">📝 New note</button>'
     + '<div class="toolbar" style="margin-top:14px">'
     + '<span class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
     +   'stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/>'
@@ -2836,40 +2894,40 @@ function notesListHTML(){
       + folders.map(function(f){
           var c = liveNotes().filter(function(nt){ return nt.folder === f; }).length;
           return '<button class="chip tiny" data-act="n-folder" data-id="' + esc(f)
-            + '">ðŸ“ ' + esc(f) + ' <span style="opacity:.6">' + c + '</span></button>';
+            + '">📁 ' + esc(f) + ' <span style="opacity:.6">' + c + '</span></button>';
         }).join("") + '</div>';
   }
 
   if(!all.length){
-    h += '<div class="empty" style="margin-top:14px"><div class="big">ðŸ“</div>'
+    h += '<div class="empty" style="margin-top:14px"><div class="big">📝</div>'
       + '<h2>' + (q ? "Nothing matches" : "No notes yet") + '</h2>'
       + '<p>' + (q ? "Try a different word."
-          : "Jot down anything â€” a reading list, homework, an idea for a story.")
+          : "Jot down anything — a reading list, homework, an idea for a story.")
       + '</p></div>';
   } else {
     h += '<div class="list">' + all.map(function(nt){
       var first = (nt.body||"").replace(/\s+/g," ").trim().slice(0, 70);
       return '<button class="li" data-act="n-open" data-id="' + esc(nt.id) + '" '
         + 'style="grid-template-columns:1fr auto">'
-        + '<span><span class="t">' + (nt.pinned ? "ðŸ“Œ " : "")
+        + '<span><span class="t">' + (nt.pinned ? "📌 " : "")
         +   esc(nt.title || "Untitled note") + '</span>'
         +   '<span class="a">' + esc(first || "empty") + '</span>'
-        +   '<span class="m">' + (nt.folder ? '<span>ðŸ“ ' + esc(nt.folder) + '</span>' : '')
+        +   '<span class="m">' + (nt.folder ? '<span>📁 ' + esc(nt.folder) + '</span>' : '')
         +   '<span>' + esc(ago(nt.updated)) + '</span>'
         +   '<span>' + n(words(nt.body)) + ' words</span></span></span>'
-        + '<span class="go">â€º</span></button>';
+        + '<span class="go">›</span></button>';
     }).join("") + '</div>';
   }
 
   var binned = binnedNotes();
   if(binned.length){
-    h += '<div class="section"><div class="sechead"><h3>Recently deleted Â· '
+    h += '<div class="section"><div class="sechead"><h3>Recently deleted · '
       + binned.length + '</h3></div>'
       + '<p class="hint" style="margin:0 0 10px">Kept here so a note deleted by '
       + 'accident can be brought back.</p>'
       + '<div class="chips">' + binned.map(function(nt){
           return '<button class="chip tiny" data-act="n-restore" data-id="' + esc(nt.id)
-            + '">â†© ' + esc((nt.title||"Untitled").slice(0,24)) + '</button>'; }).join("")
+            + '">↩ ' + esc((nt.title||"Untitled").slice(0,24)) + '</button>'; }).join("")
       + '</div></div>';
   }
   return h + backupNoteHTML();
@@ -2879,7 +2937,7 @@ function viewNoteEditor(){
   var nt = noteById(W.note);
   if(!nt){ W.note = null; return viewWrite(); }
   return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">'
-    + '<button class="btn ghost sm" data-act="n-close">â€¹ My notes</button>'
+    + '<button class="btn ghost sm" data-act="n-close">‹ My notes</button>'
     + '<span class="hint" id="nSaved" style="margin-left:auto">saved</span></div>'
     + '<div class="card">'
     + '<div class="field"><label for="nTitle">Title</label>'
@@ -2888,7 +2946,7 @@ function viewNoteEditor(){
     + '<div class="field"><label for="nFolder">Folder <span style="font-weight:600">'
     +   '(optional)</span></label>'
     +   '<input id="nFolder" type="text" maxlength="30" list="folderList" '
-    +   'placeholder="School, Ideas, Booksâ€¦" value="' + esc(nt.folder||"") + '">'
+    +   'placeholder="School, Ideas, Books…" value="' + esc(nt.folder||"") + '">'
     +   '<datalist id="folderList">'
     +   noteFolders().map(function(f){ return '<option value="' + esc(f) + '">'; }).join("")
     +   '</datalist></div>'
@@ -2897,27 +2955,27 @@ function viewNoteEditor(){
     +   'font-size:' + (S.nsize||16) + 'px;line-height:1.7">' + esc(nt.body||"")
     +   '</textarea></div>'
     + '<div class="row" style="margin-top:10px">'
-    +   '<button class="btn ghost sm" data-act="n-smaller">Aâˆ’</button>'
+    +   '<button class="btn ghost sm" data-act="n-smaller">A−</button>'
     +   '<button class="btn ghost sm" data-act="n-bigger">A+</button>'
     +   '<button class="btn ghost sm" data-act="n-pin" aria-pressed="' + !!nt.pinned + '">'
-    +     (nt.pinned ? "ðŸ“Œ Pinned" : "ðŸ“Œ Pin to top") + '</button>'
-    +   '<button class="btn ghost sm" data-act="n-export">â¬‡ Save as text</button>'
+    +     (nt.pinned ? "📌 Pinned" : "📌 Pin to top") + '</button>'
+    +   '<button class="btn ghost sm" data-act="n-export">⬇ Save as text</button>'
     + '</div>'
     + '<p class="hint" style="margin:12px 0 0">Started ' + esc(ago(nt.created))
-    +   ' Â· last changed ' + esc(ago(nt.updated)) + '</p>'
+    +   ' · last changed ' + esc(ago(nt.updated)) + '</p>'
     + '</div>'
     + '<button class="btn ghost danger" data-act="n-del" style="margin-top:14px">'
-    + 'ðŸ—‘ Delete this note</button>';
+    + '🗑 Delete this note</button>';
 }
 
 function viewDiscover(){
   var h = '<h1>Discover free books</h1>'
-    + '<p class="sub">Books whose copyright has run out, from Wikisource â€” the '
+    + '<p class="sub">Books whose copyright has run out, from Wikisource — the '
     + 'Wikipedia people\'s library. Free, legal, and they arrive as text, so they '
     + 'read aloud straight away and take almost no room.</p>';
 
   if(navigator.onLine === false){
-    h += '<div class="note warn" style="margin-bottom:14px"><span class="ic">âœˆï¸</span>'
+    h += '<div class="note warn" style="margin-bottom:14px"><span class="ic">✈️</span>'
       + '<span><b>You are offline.</b> Finding new books needs the internet. Books '
       + 'already saved open as normal.</span></div>';
   }
@@ -2947,20 +3005,20 @@ function viewDiscover(){
     h += '<div class="card"><h2>' + esc(D.pick.title) + '</h2>'
       + '<p class="hint" style="margin:4px 0 0">'
       + (got ? got + ' part' + (got===1?"":"s") + ' found. Untick anything you do not want.'
-             : 'Looking for the chaptersâ€¦') + '</p>'
+             : 'Looking for the chapters…') + '</p>'
       + '<div class="ch-list">'
       + D.chapters.map(function(c, i){
           var nice = c.indexOf("/") >= 0 ? c.slice(c.indexOf("/")+1) : c;
           return '<button class="ch-row" data-act="d-chap" data-i="' + i
             + '" aria-pressed="' + !!D.chosen[i] + '"><i>'
-            + (D.chosen[i] ? "âœ“" : "") + '</i><span>' + esc(nice) + '</span></button>';
+            + (D.chosen[i] ? "✓" : "") + '</i><span>' + esc(nice) + '</span></button>';
         }).join("")
       + '</div>'
       + '<div class="row" style="margin-top:12px">'
       + '<button class="btn sm" data-act="d-all">Tick all</button>'
       + '<button class="btn ghost sm" data-act="d-none">Untick all</button></div>'
       + '<button class="btn" data-act="d-save" style="margin-top:12px">'
-      + 'â¬‡ Save this book to my library</button>'
+      + '⬇ Save this book to my library</button>'
       + '<button class="btn quiet" data-act="d-back">Back to the results</button>'
       + '<p class="hint" style="margin-top:10px">Everything on Wikisource is out of '
       + 'copyright or freely licensed. The book is saved onto this device and works '
@@ -2970,15 +3028,15 @@ function viewDiscover(){
 
   if(D.state === "loading"){
     return h + '<div class="card"><div style="display:flex;align-items:center;gap:10px">'
-      + '<span class="spin"></span><b>Searching Wikisourceâ€¦</b></div></div>';
+      + '<span class="spin"></span><b>Searching Wikisource…</b></div></div>';
   }
   if(D.state === "error"){
-    return h + '<div class="note bad"><span class="ic">âš ï¸</span><span>'
+    return h + '<div class="note bad"><span class="ic">⚠️</span><span>'
       + esc(D.err) + '</span></div>'
       + '<button class="btn ghost" data-act="d-go" style="margin-top:12px">Try again</button>';
   }
   if(D.state === "idle"){
-    return h + '<div class="empty"><div class="big">ðŸŒ</div>'
+    return h + '<div class="empty"><div class="big">🌍</div>'
       + '<h2>Find something to read</h2>'
       + '<p>Try <b>Alice</b>, <b>Sherlock Holmes</b>, <b>Shakespeare</b> or '
       + '<b>Aesop</b>. Thousands of books, all free and legal.</p>'
@@ -2989,14 +3047,14 @@ function viewDiscover(){
       + '</div></div>';
   }
   if(!D.results.length){
-    return h + '<div class="empty"><div class="big">ðŸ”</div><h2>Nothing found</h2>'
-      + '<p>No free book matches â€œ' + esc(D.q) + 'â€ in that language. Try fewer '
+    return h + '<div class="empty"><div class="big">🔍</div><h2>Nothing found</h2>'
+      + '<p>No free book matches “' + esc(D.q) + '” in that language. Try fewer '
       + 'words, or a different language.</p></div>';
   }
   h += '<p class="hint" style="margin:0 0 12px">' + D.results.length + ' found</p>'
     + '<div class="dz">' + D.results.map(function(r){
         return '<button class="dz-card" data-act="d-pick" data-id="' + esc(r.title) + '">'
-          + '<span class="dz-free">âœ“ Free</span>'
+          + '<span class="dz-free">✓ Free</span>'
           + '<span class="t">' + esc(r.title) + '</span>'
           + '<span class="sn">' + esc(r.snippet) + '</span></button>';
       }).join("") + '</div>';
@@ -3010,26 +3068,104 @@ function viewMarks(){
   });
   rows.sort(function(x, y){ return (y.m.at||0) - (x.m.at||0); });
 
-  var h = '<h1>Bookmarks</h1><p class="sub">'
-    + (rows.length ? rows.length + ' saved place' + (rows.length===1?"":"s") + '.'
-                   : 'Pages you marked while reading.') + '</p>';
-  if(!rows.length){
-    return h + '<div class="empty"><div class="big">ðŸ”–</div><h2>No bookmarks yet</h2>'
-      + '<p>While you are reading, tap the ribbon to mark a page. Marked pages '
-      + 'show up here so you can jump straight back.</p></div>';
+  var hls = [];
+  BOOKS.forEach(function(b){
+    bookHL(b).forEach(function(x){
+      if(!x || !x.t) return;
+      if((x.p|0) >= (b.pages||[]).length) return;   /* points past the end */
+      hls.push({b:b, x:x});
+    });
+  });
+  hls.sort(function(a, c){ return (c.x.at||0) - (a.x.at||0); });
+
+  var h = '<h1>Saved</h1><p class="sub">'
+    + (rows.length || hls.length
+        ? rows.length + ' bookmark' + (rows.length===1?"":"s") + ' and '
+          + hls.length + ' highlight' + (hls.length===1?"":"s") + '.'
+        : 'Pages you marked and lines you kept while reading.') + '</p>';
+
+  if(!rows.length && !hls.length){
+    return h + '<div class="empty"><div class="big">🔖</div><h2>Nothing saved yet</h2>'
+      + '<p>While you are reading, tap the ribbon to mark a page. To keep a line, '
+      + 'select the words — or on a photographed page, tap 🖍 and drag across '
+      + 'them.</p></div>';
   }
-  h += '<div class="list">' + rows.map(function(r){
-    return '<button class="li" data-act="open-at" data-id="' + esc(r.b.id)
-      + '" data-p="' + r.m.p + '">'
-      + coverHTML(r.b, {noPill:1})
-      + '<span><span class="t">' + esc(r.b.title || "Untitled") + '</span>'
-      +   '<span class="a">'
-      +     esc(partLabel(r.b, r.m.p, "").replace(/^./, function(c){ return c.toUpperCase(); }))
-      +     (r.m.note ? ' Â· ' + esc(r.m.note) : '') + '</span>'
-      +   '<span class="m"><span>' + esc(ago(r.m.at)) + '</span></span></span>'
-      + '<span class="go">â€º</span></button>';
-  }).join("") + '</div>';
+
+  if(hls.length){
+    h += '<div class="section"><div class="sechead"><h3>Highlights · ' + hls.length + '</h3>'
+      + '<button class="linkbtn" data-act="hl-copy-all">Copy them all</button>'
+      + '<button class="linkbtn" data-act="hl-export">Save as a file</button></div>'
+      + '<div class="list">' + hls.map(function(r, i){
+          return '<div class="li" style="cursor:default;align-items:flex-start">'
+            + '<span class="hlswatch ' + esc(r.x.c || "y") + '"></span>'
+            + '<span><span class="t" style="white-space:normal">“'
+            +   esc(r.x.t.length > 300 ? r.x.t.slice(0, 300) + "…" : r.x.t) + '”</span>'
+            + (r.x.note ? '<span class="a" style="white-space:normal">📝 '
+                + esc(r.x.note) + '</span>' : '')
+            + '<span class="m"><span>' + esc(r.b.title || "Untitled") + '</span>'
+            +   '<span>' + esc(partLabel(r.b, r.x.p, "")) + '</span>'
+            +   '<span>' + esc(ago(r.x.at)) + '</span></span></span>'
+            + '<span style="display:flex;flex-direction:column;gap:6px">'
+            +   '<button class="btn ghost sm" data-act="open-at" data-id="' + esc(r.b.id)
+            +     '" data-p="' + r.x.p + '">Open</button>'
+            +   '<button class="btn ghost sm" data-act="hl-copy" data-i="' + i
+            +     '">Copy</button></span>'
+            + '</div>';
+        }).join("") + '</div></div>';
+  }
+
+  if(rows.length){
+    h += '<div class="section"><div class="sechead"><h3>Bookmarks · ' + rows.length
+      + '</h3></div><div class="list">' + rows.map(function(r){
+      return '<button class="li" data-act="open-at" data-id="' + esc(r.b.id)
+        + '" data-p="' + r.m.p + '">'
+        + coverHTML(r.b, {noPill:1})
+        + '<span><span class="t">' + esc(r.b.title || "Untitled") + '</span>'
+        +   '<span class="a">'
+        +     esc(partLabel(r.b, r.m.p, "").replace(/^./, function(c){ return c.toUpperCase(); }))
+        +     (r.m.note ? ' · ' + esc(r.m.note) : '') + '</span>'
+        +   '<span class="m"><span>' + esc(ago(r.m.at)) + '</span></span></span>'
+        + '<span class="go">›</span></button>';
+    }).join("") + '</div></div>';
+  }
   return h;
+}
+
+function allHighlights(){
+  var out = [];
+  BOOKS.forEach(function(b){
+    bookHL(b).forEach(function(x){
+      if(!x || !x.t) return;
+      if((x.p|0) >= (b.pages||[]).length) return;
+      out.push({b:b, x:x});
+    });
+  });
+  out.sort(function(a, c){ return (c.x.at||0) - (a.x.at||0); });
+  return out;
+}
+function highlightsAsText(){
+  var byBook = {};
+  allHighlights().forEach(function(r){
+    var k = r.b.id;
+    if(!byBook[k]) byBook[k] = {b:r.b, items:[]};
+    byBook[k].items.push(r.x);
+  });
+  var out = [];
+  Object.keys(byBook).forEach(function(k){
+    var g = byBook[k];
+    out.push((g.b.title || "Untitled") + (g.b.author ? " — " + g.b.author : ""));
+    out.push(new Array(Math.min(60, (g.b.title||"Untitled").length + 1)).join("="));
+    g.items.sort(function(a, c){ return (a.p||0) - (c.p||0); });
+    g.items.forEach(function(x){
+      out.push("");
+      out.push("[" + partLabel(g.b, x.p, "") + "]");
+      out.push("“" + x.t + "”");
+      if(x.note) out.push("  note: " + x.note);
+    });
+    out.push("");
+    out.push("");
+  });
+  return out.join("\n");
 }
 
 function slideRow(el, by){
@@ -3076,7 +3212,7 @@ function viewSearch(){
   var h = '<h1>Search</h1>'
     + '<p class="sub">Titles, authors, descriptions, your tags and shelves, your '
     + 'notes, your own writing, chapter names, your bookmarked notes and '
-    + 'highlights â€” and any photographed page whose words have been '
+    + 'highlights — and any photographed page whose words have been '
     + 'recognised.</p>'
     + '<div class="toolbar">'
     + '<span class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
@@ -3087,30 +3223,30 @@ function viewSearch(){
     + '<button class="btn sm" data-act="g-go">Search</button></div>';
 
   if(SQ.busy) return h + '<div class="card"><div style="display:flex;align-items:center;'
-    + 'gap:10px"><span class="spin"></span><b>Lookingâ€¦</b></div></div>';
+    + 'gap:10px"><span class="spin"></span><b>Looking…</b></div></div>';
 
   if(!SQ.hits){
     return h
       + (SQ.tooShort
-          ? '<div class="note warn"><span class="ic">âœï¸</span><span>Two letters at '
+          ? '<div class="note warn"><span class="ic">✏️</span><span>Two letters at '
             + 'least, or there would be far too much to show.</span></div>'
           : '')
-      + '<div class="empty"><div class="big">ðŸ”</div><h2>What are you after?</h2>'
+      + '<div class="empty"><div class="big">🔍</div><h2>What are you after?</h2>'
       + '<p>Searching inside a photographed page only works once its words have been '
-      + 'recognised â€” that is the ðŸ”¤ button in the reader, and it needs the internet '
+      + 'recognised — that is the 🔤 button in the reader, and it needs the internet '
       + 'the first time. Books you wrote and free books are searchable straight '
       + 'away.</p></div>';
   }
   var t = SQ.hits;
   var total = t.books.length + t.notes.length + t.pageTotal;
   if(!total){
-    return h + '<div class="empty"><div class="big">ðŸ¤·</div><h2>Nothing found</h2>'
-      + '<p>Nothing in your books, notes or writing matches â€œ' + esc(SQ.q) + 'â€.</p>'
+    return h + '<div class="empty"><div class="big">🤷</div><h2>Nothing found</h2>'
+      + '<p>Nothing in your books, notes or writing matches “' + esc(SQ.q) + '”.</p>'
       + (t.noTextPages
           ? '<p><b>' + t.noTextPages + ' page' + (t.noTextPages===1?"":"s")
-            + ' could not be searched at all</b> â€” '
+            + ' could not be searched at all</b> — '
             + (t.noTextPages===1 ? 'it is a photograph whose' : 'they are photographs whose')
-            + ' words have not been recognised yet. Open the page and tap ðŸ”¤ '
+            + ' words have not been recognised yet. Open the page and tap 🔤 '
             + 'to read the words off it. That part needs the internet the '
             + 'first time.</p>'
           : '')
@@ -3118,13 +3254,13 @@ function viewSearch(){
   }
   h += '<p class="hint" style="margin:0 0 14px">' + total + ' found'
     + (t.noTextPages
-        ? ' Â· ' + t.noTextPages + ' page' + (t.noTextPages===1?"":"s")
+        ? ' · ' + t.noTextPages + ' page' + (t.noTextPages===1?"":"s")
           + ' not searched (words not recognised)'
         : '')
     + '</p>';
 
   if(t.books.length){
-    h += '<div class="section"><div class="sechead"><h3>Books Â· ' + t.books.length
+    h += '<div class="section"><div class="sechead"><h3>Books · ' + t.books.length
       + '</h3></div><div class="list">'
       + t.books.map(function(bb){
           var row = bookRowHTML(bb);
@@ -3137,7 +3273,7 @@ function viewSearch(){
       + '</div></div>';
   }
   if(t.pages.length){
-    h += '<div class="section"><div class="sechead"><h3>Inside books Â· '
+    h += '<div class="section"><div class="sechead"><h3>Inside books · '
       + (t.pageTotal > t.pages.length
           ? 'showing ' + t.pages.length + ' of ' + t.pageTotal
           : t.pageTotal)
@@ -3147,10 +3283,10 @@ function viewSearch(){
             + '" data-p="' + p.page + '" style="grid-template-columns:1fr auto">'
             + '<span><span class="t">' + esc(p.book.title||"Untitled") + '</span>'
             + '<span class="a">' + esc(partLabel(p.book, p.page, p.title))
-            + (p.titleOnly ? ' Â· matched the title' : '') + '</span>'
-            + '<span class="m" style="display:block;margin-top:4px">â€¦'
-            + mark(p.snippet, SQ.q) + 'â€¦</span></span>'
-            + '<span class="go">â€º</span></button>'; }).join("")
+            + (p.titleOnly ? ' · matched the title' : '') + '</span>'
+            + '<span class="m" style="display:block;margin-top:4px">…'
+            + mark(p.snippet, SQ.q) + '…</span></span>'
+            + '<span class="go">›</span></button>'; }).join("")
       + '</div>'
       + (t.pageTotal > t.pages.length
           ? '<p class="hint" style="margin-top:9px">Only the first '
@@ -3160,15 +3296,15 @@ function viewSearch(){
       + '</div>';
   }
   if(t.notes.length){
-    h += '<div class="section"><div class="sechead"><h3>Notes Â· ' + t.notes.length
+    h += '<div class="section"><div class="sechead"><h3>Notes · ' + t.notes.length
       + '</h3></div><div class="list">'
       + t.notes.map(function(x){
           return '<button class="li" data-act="g-note" data-id="' + esc(x.note.id)
             + '" style="grid-template-columns:1fr auto">'
             + '<span><span class="t">' + mark(x.note.title||"Untitled note", SQ.q) + '</span>'
-            + '<span class="m" style="display:block;margin-top:4px">â€¦'
-            + mark(x.snippet, SQ.q) + 'â€¦</span></span>'
-            + '<span class="go">â€º</span></button>'; }).join("")
+            + '<span class="m" style="display:block;margin-top:4px">…'
+            + mark(x.snippet, SQ.q) + '…</span></span>'
+            + '<span class="go">›</span></button>'; }).join("")
       + '</div></div>';
   }
   return h;
@@ -3194,7 +3330,7 @@ function viewBadges(){
           +   esc(bd.tip) + '</div>'
           + (on
               ? '<div class="hint" style="font-size:11px;margin-top:8px;color:var(--ok);'
-                + 'font-weight:800">âœ“ ' + esc(ago(S.badges[bd.id])) + '</div>'
+                + 'font-weight:800">✓ ' + esc(ago(S.badges[bd.id])) + '</div>'
               : '<div class="dna-bar" style="margin-top:9px"><i style="width:' + pc
                 + '%;background:var(--violet)"></i></div>'
                 + '<div class="hint" style="font-size:11px;margin-top:5px">'
@@ -3237,7 +3373,7 @@ function viewSettings(){
       + '<p class="hint" style="margin-top:9px">How much a browser allows depends on the '
       + 'device and how much free space it has. It is not a fixed number and it is not '
       + 'unlimited.</p>'
-      + (p >= 85 ? '<div class="note warn" style="margin-top:11px"><span class="ic">âš ï¸</span>'
+      + (p >= 85 ? '<div class="note warn" style="margin-top:11px"><span class="ic">⚠️</span>'
           + '<span><b>Running low.</b> Delete a book you have finished to make room, '
           + 'or new pages may fail to save.</span></div>' : '');
   } else {
@@ -3246,14 +3382,14 @@ function viewSettings(){
   }
   h += '<div style="margin-top:12px">'
     + (persistState === true
-        ? '<div class="note ok"><span class="ic">ðŸ”’</span><span><b>Your books are '
+        ? '<div class="note ok"><span class="ic">🔒</span><span><b>Your books are '
           + 'protected.</b> This browser has agreed to keep them even when the device '
           + 'is short of room.</span></div>'
-        : '<div class="note warn"><span class="ic">âš ï¸</span><span><b>Not protected '
+        : '<div class="note warn"><span class="ic">⚠️</span><span><b>Not protected '
           + 'yet.</b> A browser is allowed to delete a website\'s saved files when '
           + 'space runs short. Asking it not to takes one tap.</span></div>'
           + '<button class="btn ghost" data-act="keep-safe" style="margin-top:10px">'
-          + 'ðŸ”’ Ask the browser to keep my books</button>')
+          + '🔒 Ask the browser to keep my books</button>')
     + '</div>';
   h += '</div></div>';
 
@@ -3294,15 +3430,15 @@ function viewSettings(){
     + '<div class="card">';
   if(healthBusy){
     h += '<div style="display:flex;align-items:center;gap:10px"><span class="spin"></span>'
-      + '<b>Counting every book and every pageâ€¦</b></div>';
+      + '<b>Counting every book and every page…</b></div>';
   } else if(!health){
     h += '<p class="hint" style="margin:0 0 12px">Counts the pages each book says it '
       + 'has, counts the pages actually in storage, and tells you whether the two '
-      + 'agree. It only looks â€” nothing is changed or deleted unless you ask '
+      + 'agree. It only looks — nothing is changed or deleted unless you ask '
       + 'afterwards.</p>'
-      + '<button class="btn ghost" data-act="check-lib">ðŸ” Check my library</button>';
+      + '<button class="btn ghost" data-act="check-lib">🔍 Check my library</button>';
   } else if(health.failed){
-    h += '<div class="note warn"><span class="ic">âš ï¸</span><span><b>The check could not '
+    h += '<div class="note warn"><span class="ic">⚠️</span><span><b>The check could not '
       + 'be done.</b> Storage would not answer, so there is nothing honest to '
       + 'report.</span></div>'
       + '<button class="btn ghost" data-act="check-lib" style="margin-top:10px">'
@@ -3313,20 +3449,20 @@ function viewSettings(){
       + (health.books===1?"":"s") + ' and ' + health.pages + ' page'
       + (health.pages===1?"":"s") + ' in storage. Checked ' + ago(health.at) + '.</p>';
     if(!sick && !health.orphans.length){
-      h += '<div class="note ok"><span class="ic">âœ…</span><span><b>Everything '
+      h += '<div class="note ok"><span class="ic">✅</span><span><b>Everything '
         + 'agrees.</b> Every book points at pages that are really there, and every '
         + 'page belongs to a book.</span></div>';
     }
     if(sick){
-      h += '<div class="note warn"><span class="ic">âš ï¸</span><span><b>Some books do not '
+      h += '<div class="note warn"><span class="ic">⚠️</span><span><b>Some books do not '
         + 'add up.</b><br>'
-        + (health.missing ? 'â€¢ ' + health.missing + ' page' + (health.missing===1?"":"s")
+        + (health.missing ? '• ' + health.missing + ' page' + (health.missing===1?"":"s")
             + ' listed by a book but not in storage<br>' : '')
-        + (health.wrongBook ? 'â€¢ ' + health.wrongBook + ' page'
+        + (health.wrongBook ? '• ' + health.wrongBook + ' page'
             + (health.wrongBook===1?"":"s") + ' filed under a different book<br>' : '')
-        + (health.shared ? 'â€¢ ' + health.shared + ' page' + (health.shared===1?"":"s")
+        + (health.shared ? '• ' + health.shared + ' page' + (health.shared===1?"":"s")
             + ' claimed by two books at once<br>' : '')
-        + (health.badCover ? 'â€¢ ' + health.badCover + ' cover pointing at nothing<br>' : '')
+        + (health.badCover ? '• ' + health.badCover + ' cover pointing at nothing<br>' : '')
         + 'Until this is put right, the page counts on those books are wrong.'
         + '</span></div>'
         + '<div class="list" style="margin-top:10px">'
@@ -3343,15 +3479,15 @@ function viewSettings(){
           }).join("")
         + '</div>'
         + '<button class="btn ghost" data-act="fix-counts" style="margin-top:10px">'
-        + 'ðŸ”§ Make the page counts true <span style="opacity:.6">(deletes '
+        + '🔧 Make the page counts true <span style="opacity:.6">(deletes '
         + 'nothing)</span></button>';
     }
     if(health.orphans.length){
-      h += '<div class="note warn" style="margin-top:11px"><span class="ic">ðŸ§¹</span>'
+      h += '<div class="note warn" style="margin-top:11px"><span class="ic">🧹</span>'
         + '<span><b>' + health.orphans.length + ' page'
         + (health.orphans.length===1?"":"s") + ' nothing points at.</b> Left behind by '
         + 'a delete or a restore that stopped part way. They cannot be read and they '
-        + 'take up room. Deleting them cannot be undone, so it is your call â€” nothing '
+        + 'take up room. Deleting them cannot be undone, so it is your call — nothing '
         + 'has been touched.</span></div>'
         + '<button class="btn ghost" data-act="del-orphans" style="margin-top:10px">'
         + 'Delete ' + health.orphans.length + ' left-over page'
@@ -3361,7 +3497,7 @@ function viewSettings(){
       h += '<p class="hint" style="margin-top:11px">' + health.drafts
         + (health.drafts===1 ? ' page is' : ' pages are')
         + ' waiting in the scan tray. '
-        + (health.drafts===1 ? 'That is not lost â€” it is a picture' : 'Those are not lost â€” they are pictures')
+        + (health.drafts===1 ? 'That is not lost — it is a picture' : 'Those are not lost — they are pictures')
         + ' you have added but not yet made into a book.</p>';
     }
     h += '<button class="linkbtn" data-act="check-lib" style="margin-top:11px">'
@@ -3370,22 +3506,22 @@ function viewSettings(){
   h += '</div></div>';
 
   h += '<div class="section"><div class="sechead"><h3>Backup</h3></div><div class="card">'
-    + '<p class="hint" style="margin:0 0 12px">A browser can clear its own storage â€” if '
+    + '<p class="hint" style="margin:0 0 12px">A browser can clear its own storage — if '
     + 'you wipe browsing data, or the device runs out of room, these books go with it. '
     + 'A backup file is the only copy that survives that.</p>'
-    + '<button class="btn ghost" data-act="export-meta">ðŸ“„ Save the details only '
+    + '<button class="btn ghost" data-act="export-meta">📄 Save the details only '
     + '<span style="opacity:.6">(small)</span></button>'
-    + '<button class="btn ghost" data-act="export-full">ðŸ“¦ Save everything, pages included '
+    + '<button class="btn ghost" data-act="export-full">📦 Save everything, pages included '
     + '<span style="opacity:.6">(' + kb(BOOKS.reduce(function(a,b){ return a+(b.bytes||0); },0) * 1.37)
     + ')</span></button>'
-    + '<p class="hint" style="margin:10px 0 0">â€œDetails onlyâ€ keeps titles, shelves, '
-    + 'bookmarks, notes and your place in each book â€” but not the page pictures, so the '
-    + 'books come back empty. â€œEverythingâ€ is a real copy and is large.</p>'
+    + '<p class="hint" style="margin:10px 0 0">“Details only” keeps titles, shelves, '
+    + 'bookmarks, notes and your place in each book — but not the page pictures, so the '
+    + 'books come back empty. “Everything” is a real copy and is large.</p>'
     + '<button class="btn ghost" data-act="import-file" style="margin-top:12px">'
-    + 'ðŸ“¥ Load a backup</button></div></div>';
+    + '📥 Load a backup</button></div></div>';
 
   h += '<div class="section"><div class="sechead"><h3>Privacy</h3></div>'
-    + '<div class="note ok"><span class="ic">ðŸ”’</span><span>'
+    + '<div class="note ok"><span class="ic">🔒</span><span>'
     + '<b>Your pages never leave this device.</b> There is no account, no sign-in, no '
     + 'server and nothing is uploaded anywhere. The photos sit in this browser\'s own '
     + 'storage on this computer or phone.</span></div>'
@@ -3395,10 +3531,10 @@ function viewSettings(){
     + 'load it there.</p>'
     + '<p class="hint" style="margin-top:9px"><b>Deleting a book here does not touch '
     + 'your own file.</b> The photo, PDF or EPUB you imported from is still wherever '
-    + 'you keep it â€” BookVault only removes its own copy.</p>'
+    + 'you keep it — BookVault only removes its own copy.</p>'
     + '<p class="hint" style="margin-top:11px">Two optional things do use the internet, '
     + 'and only when you tap them: reading the text off a page, and opening a PDF. Both '
-    + 'fetch a tool the first time. Everything else â€” including all reading â€” works with '
+    + 'fetch a tool the first time. Everything else — including all reading — works with '
     + 'no connection at all.</p></div>';
 
   h += '<div class="section"><div class="sechead"><h3>Clear everything</h3></div>'
@@ -3410,14 +3546,15 @@ function viewSettings(){
   return h;
 }
 
-var R = {id:null, idx:0, zoom:1, fit:"width", bare:false, pages:[], saveT:0};
+var R = {id:null, idx:0, zoom:1, fit:"width", bare:false, pages:[], saveT:0,
+         hlMode:false};
 var readerEl = document.getElementById("reader");
 
 function openReader(bookId, startPage){
   var b = book(bookId);
   if(!b) return;
   if(!(b.pages||[]).length){
-    toast("ðŸ“„", "This book has no pages yet");
+    toast("📄", "This book has no pages yet");
     openBookSheet(bookId);
     return;
   }
@@ -3438,6 +3575,8 @@ function openReader(bookId, startPage){
 function closeReader(){
   saveSpot(true);
   if(!playerEl.hidden) closeListen();
+  setHLMode(false);
+  RWORDS = null;
   readerEl.hidden = true;
   readerEl.innerHTML = "";
   document.body.style.overflow = "";
@@ -3451,15 +3590,15 @@ function buildReader(){
   readerEl.className = R.bare ? "bare" : "";
   readerEl.innerHTML =
       '<div class="rd-top">'
-    +   '<button class="rd-ic" data-act="rd-close" aria-label="Close the book">âœ•</button>'
+    +   '<button class="rd-ic" data-act="rd-close" aria-label="Close the book">✕</button>'
     +   '<span class="rd-title">' + esc(b.title || "Untitled") + '</span>'
-    +   '<button class="rd-ic" data-act="rd-mark" aria-label="Bookmark this page">ðŸ”–</button>'
-    +   '<button class="rd-ic" data-act="rd-note" aria-label="Note on this page">ðŸ“</button>'
-    +   '<button class="rd-ic" data-act="rd-ocr" aria-label="Read the text">ðŸ”¤</button>'
-    +   '<button class="rd-ic" data-act="rd-listen" aria-label="Read it to me out loud">ðŸŽ§</button>'
-    +   '<button class="rd-ic" data-act="rd-full" aria-label="Full screen">â›¶</button>'
+    +   '<button class="rd-ic" data-act="rd-mark" aria-label="Bookmark this page">🔖</button>'
+    +   '<button class="rd-ic" data-act="rd-note" aria-label="Note on this page">📝</button>'
+    +   '<button class="rd-ic" data-act="rd-ocr" aria-label="Read the text">🔤</button>'
+    +   '<button class="rd-ic" data-act="rd-listen" aria-label="Read it to me out loud">🎧</button>'
+    +   '<button class="rd-ic" data-act="rd-full" aria-label="Full screen">⛶</button>'
     +   '<button class="rd-ic" data-act="rd-set" aria-label="How the page reads">Aa</button>'
-    +   '<button class="rd-ic" data-act="rd-bare" aria-label="Hide the controls">ðŸ‘</button>'
+    +   '<button class="rd-ic" data-act="rd-bare" aria-label="Hide the controls">👁</button>'
     + '</div>'
     + '<div id="rset"></div>'
     + '<div class="rd-stage" id="rdStage">'
@@ -3468,23 +3607,26 @@ function buildReader(){
     +   '<span class="rd-pagewrap" id="rdWrap">'
     +     '<img id="rdImg" alt="">'
     +     '<span class="rd-hl" id="rdHL"></span>'
+    +     '<span class="rd-hl" id="rdMarks"></span>'
     +   '</span>'
     + '</div>'
     + '<div class="rd-bot">'
     +   '<div class="rd-rowline">'
-    +     '<button class="rd-ic" data-act="rd-prev" aria-label="Previous">â€¹</button>'
+    +     '<button class="rd-ic" data-act="rd-prev" aria-label="Previous">‹</button>'
     +     '<input class="rd-seek" id="rdSeek" type="range" min="1" max="'
     +       R.pages.length + '" value="' + (R.idx+1) + '" aria-label="Go to page">'
-    +     '<button class="rd-ic" data-act="rd-next" aria-label="Next">â€º</button>'
+    +     '<button class="rd-ic" data-act="rd-next" aria-label="Next">›</button>'
     +   '</div>'
     +   '<div class="rd-rowline">'
-    +     '<button class="rd-ic" data-act="rd-zoom-out" aria-label="Zoom out">âˆ’</button>'
+    +     '<button class="rd-ic" data-act="rd-zoom-out" aria-label="Zoom out">−</button>'
     +     '<button class="rd-ic" data-act="rd-zoom-in" aria-label="Zoom in">+</button>'
-    +     '<button class="rd-ic" data-act="rd-fit" aria-label="Fit width or screen">â†”</button>'
+    +     '<button class="rd-ic" data-act="rd-fit" aria-label="Fit width or screen">↔</button>'
     +     '<span class="rd-page" id="rdPage"></span>'
     +     '<button class="rd-ic" data-act="rd-jump" aria-label="Jump to a page">#</button>'
-    +     '<button class="rd-ic" data-act="rd-bg" aria-label="Change the background">â—</button>'
-    +     '<button class="rd-ic" data-act="rd-rot" aria-label="Turn the page">âŸ³</button>'
+    +     '<button class="rd-ic" data-act="rd-bg" aria-label="Change the background">◐</button>'
+    +     '<button class="rd-ic" data-act="rd-rot" aria-label="Turn the page">⟳</button>'
+    +     '<button class="rd-ic" id="rdHLBtn" data-act="rd-hlmode" '
+    +       'aria-label="Highlight words on this page" aria-pressed="false">🖍</button>'
     +   '</div>'
     +   '<div class="rd-strip" id="rdStrip"></div>'
     + '</div>';
@@ -3510,6 +3652,12 @@ function paintReader(){
   var wrap = document.getElementById("rdWrap");
 
   getOne("pages", id).then(function(p){
+    RWORDS = (p && p.kind !== "text" && Array.isArray(p.words) && p.words.length)
+      ? p.words : null;
+    var hb = document.getElementById("rdHLBtn");
+    if(hb) hb.hidden = !!(p && p.kind === "text");
+    if(R.hlMode && !RWORDS) setHLMode(false);
+    paintPageWords();
     if(!p || p.kind !== "text") return;
     if(!wrap) return;
     wrap.style.transform = "";
@@ -3593,13 +3741,13 @@ function sizePage(){
 }
 function rdGo(d){
   var next = R.idx + d;
-  if(next < 0){ toast("ðŸ“–", "That is the first page"); return; }
+  if(next < 0){ toast("📖", "That is the first page"); return; }
   if(next >= R.pages.length){
     var b = curBook();
     if(b && b.status !== "done"){
       b.status = "done"; b.finishedAt = Date.now(); saveBook(b);
-      toast("ðŸŽ‰", "Finished â€” nice one");
-    } else toast("ðŸ“–", "That is the last page");
+      toast("🎉", "Finished — nice one");
+    } else toast("📖", "That is the last page");
     return;
   }
   R.idx = next;
@@ -3650,10 +3798,10 @@ function addFiles(list){
   var files = Array.prototype.slice.call(list || []).filter(function(f){
     return /^image\//.test(f.type) || /\.(jpe?g|png|webp|gif|bmp)$/i.test(f.name);
   });
-  if(!files.length){ toast("âš ï¸", "Those are not pictures"); return Promise.resolve(); }
+  if(!files.length){ toast("⚠️", "Those are not pictures"); return Promise.resolve(); }
   job.stop = false;
   var done = 0, failed = 0;
-  setBusy("Adding " + files.length + " page" + (files.length===1?"":"s") + "â€¦", 0);
+  setBusy("Adding " + files.length + " page" + (files.length===1?"":"s") + "…", 0);
   return files.reduce(function(chain, f){
     return chain.then(function(){
       if(job.stop) return;
@@ -3663,28 +3811,28 @@ function addFiles(list){
         failed++;
         if(/quota|full/i.test(String(e && e.name) + String(e && e.message))){
           job.stop = true;
-          toast("âš ï¸", "This device is out of room â€” delete a book to make space");
+          toast("⚠️", "This device is out of room — delete a book to make space");
         }
       }).then(function(){
         done++;
-        setBusy("Adding " + files.length + " page" + (files.length===1?"":"s") + "â€¦",
+        setBusy("Adding " + files.length + " page" + (files.length===1?"":"s") + "…",
                 done/files.length*100);
       });
     });
   }, Promise.resolve()).then(function(){
     setBusy("", 0);
-    if(failed) toast("âš ï¸", failed + " of " + files.length + " could not be added");
-    else toast("âœ…", files.length + " page" + (files.length===1?"":"s") + " added");
+    if(failed) toast("⚠️", failed + " of " + files.length + " could not be added");
+    else toast("✅", files.length + " page" + (files.length===1?"":"s") + " added");
   });
 }
 
 function makeBook(){
-  if(!draft.pages.length){ toast("ðŸ“„", "Add some pages first"); return; }
+  if(!draft.pages.length){ toast("📄", "Add some pages first"); return; }
   var t = (document.getElementById("dTitle") || {}).value || "";
   var a = (document.getElementById("dAuthor") || {}).value || "";
   var d = (document.getElementById("dDesc") || {}).value || "";
   draft.title = t.trim(); draft.author = a.trim(); draft.desc = d.trim();
-  if(!draft.title){ toast("âœï¸", "Give the book a title first");
+  if(!draft.title){ toast("✏️", "Give the book a title first");
     var el = document.getElementById("dTitle"); if(el) el.focus(); return; }
 
   var id = uid();
@@ -3696,7 +3844,7 @@ function makeBook(){
            last:0, marks:[], pageNotes:{}, bytes:bytes,
            created:Date.now(), updated:Date.now(), opened:Date.now()};
 
-  setBusy("Saving the bookâ€¦", 50);
+  setBusy("Saving the book…", 50);
   var i = 0;
   (function step(){
     if(i >= draft.pages.length){
@@ -3706,12 +3854,12 @@ function makeBook(){
         return loadBooks();
       }).then(function(){
         setBusy("", 0);
-        toast("ðŸ“š", "â€œ" + b.title + "â€ is saved on this device");
+        toast("📚", "“" + b.title + "” is saved on this device");
         tab = "lib"; render();
         setTimeout(function(){ openBookSheet(id); }, 250);
       }).catch(function(e){
         setBusy("", 0);
-        toast("âš ï¸", "The book could not be saved â€” " + (e.message || "storage failed"));
+        toast("⚠️", "The book could not be saved — " + (e.message || "storage failed"));
       });
       return;
     }
@@ -3719,11 +3867,11 @@ function makeBook(){
     p.bookId = id;
     put("pages", p).then(function(){
       i++;
-      setBusy("Saving the bookâ€¦", 10 + i/draft.pages.length*85);
+      setBusy("Saving the book…", 10 + i/draft.pages.length*85);
       step();
     }).catch(function(e){
       setBusy("", 0);
-      toast("âš ï¸", "Stopped at page " + (i+1) + " â€” " + (e.message || "storage failed"));
+      toast("⚠️", "Stopped at page " + (i+1) + " — " + (e.message || "storage failed"));
     });
   })();
 }
@@ -3732,7 +3880,7 @@ function appendPages(){
   var b = book(draft.target);
   if(!b || !draft.pages.length) return;
   var i = 0;
-  setBusy("Adding to the bookâ€¦", 0);
+  setBusy("Adding to the book…", 0);
   (function step(){
     if(i >= draft.pages.length){
       b.pages = (b.pages||[]).concat(draft.pages.map(function(p){ return p.id; }));
@@ -3742,7 +3890,7 @@ function appendPages(){
         draft = {pages:[], target:null, title:"", author:"", desc:"",
                  tags:[], coverIdx:0, busy:"", pcT:0};
         setBusy("", 0);
-        toast("âœ…", added + " page" + (added===1?"":"s") + " added");
+        toast("✅", added + " page" + (added===1?"":"s") + " added");
         tab = "lib"; render();
         openBookSheet(b.id);
       });
@@ -3750,8 +3898,8 @@ function appendPages(){
     }
     var p = draft.pages[i]; p.bookId = b.id;
     put("pages", p).then(function(){
-      i++; setBusy("Adding to the bookâ€¦", i/draft.pages.length*100); step();
-    }).catch(function(){ setBusy("", 0); toast("âš ï¸", "Ran out of room"); });
+      i++; setBusy("Adding to the book…", i/draft.pages.length*100); step();
+    }).catch(function(){ setBusy("", 0); toast("⚠️", "Ran out of room"); });
   })();
 }
 
@@ -3803,7 +3951,7 @@ function framesFromVideo(file){
             flush();
             cluster = {canvas:c, hash:hash, sharp:sharp, t:time};
           }
-          setBusy("Looking through the videoâ€¦", (i/times.length)*70);
+          setBusy("Looking through the video…", (i/times.length)*70);
           setTimeout(next, 0);        /* yield, so the page stays alive */
         };
         v.addEventListener("seeked", onSeek);
@@ -3818,11 +3966,11 @@ function framesFromVideo(file){
 function addVideo(file){
   if(!file) return;
   job.stop = false;
-  setBusy("Opening the videoâ€¦", 2);
+  setBusy("Opening the video…", 2);
   framesFromVideo(file).then(function(frames){
     if(!frames.length){
       setBusy("", 0);
-      toast("ðŸŽ¥", "No usable frames came out of that video");
+      toast("🎥", "No usable frames came out of that video");
       return;
     }
     var scored = frames.filter(function(f){ return f.sharp != null; });
@@ -3836,8 +3984,8 @@ function addVideo(file){
     (function step(){
       if(job.stop || i >= keep.length){
         setBusy("", 0);
-        toast("ðŸŽ¥", keep.length + " page" + (keep.length===1?"":"s") + " pulled out"
-          + (dropped ? " Â· " + dropped + " blurry one" + (dropped===1?"":"s") + " dropped" : ""));
+        toast("🎥", keep.length + " page" + (keep.length===1?"":"s") + " pulled out"
+          + (dropped ? " · " + dropped + " blurry one" + (dropped===1?"":"s") + " dropped" : ""));
         render();
         return;
       }
@@ -3846,29 +3994,29 @@ function addVideo(file){
         draft.pages.push(rec);
         f.canvas = null;                     /* let the big one go */
         i++;
-        setBusy("Saving the pagesâ€¦", 70 + (i/keep.length)*30);
+        setBusy("Saving the pages…", 70 + (i/keep.length)*30);
         step();
       }).catch(function(){
         setBusy("", 0);
-        toast("âš ï¸", "Ran out of room at page " + (i+1));
+        toast("⚠️", "Ran out of room at page " + (i+1));
         render();
       });
     })();
   }).catch(function(e){
     setBusy("", 0);
-    toast("âš ï¸", e.message || "That video could not be read");
+    toast("⚠️", e.message || "That video could not be read");
   });
 }
 
 function addPDF(file){
   job.stop = false;
-  setBusy("Fetching the PDF readerâ€¦", 3);
+  setBusy("Fetching the PDF reader…", 3);
   loadScript(PDF_JS).then(function(){
     if(!window.pdfjsLib) throw new Error("offline");
     pdfjsLib.GlobalWorkerOptions.workerSrc = PDF_WK;
     return file.arrayBuffer();
   }).then(function(buf){
-    setBusy("Opening the PDFâ€¦", 8);
+    setBusy("Opening the PDF…", 8);
     return pdfjsLib.getDocument({data:buf}).promise;
   }).then(function(pdf){
     var total = pdf.numPages, i = 1;
@@ -3884,21 +4032,21 @@ function addPDF(file){
           .then(function(){ return makePage(c); });
       }).then(function(rec){
         draft.pages.push(rec);
-        setBusy("Reading the PDFâ€¦ page " + i + " of " + total, (i/total)*100);
+        setBusy("Reading the PDF… page " + i + " of " + total, (i/total)*100);
         i++;
         return step();
       });
     })().then(function(){ return total; });
   }).then(function(total){
     setBusy("", 0);
-    toast("ðŸ“„", draft.pages.length + " page" + (draft.pages.length===1?"":"s") + " ready");
+    toast("📄", draft.pages.length + " page" + (draft.pages.length===1?"":"s") + " ready");
     render();
   }).catch(function(e){
     setBusy("", 0);
     if(String(e && e.message) === "offline"){
-      toast("ðŸ“¡", "Opening PDFs needs the internet the first time");
+      toast("📡", "Opening PDFs needs the internet the first time");
     } else {
-      toast("âš ï¸", "That PDF could not be read â€” " + (e && e.message || "unknown"));
+      toast("⚠️", "That PDF could not be read — " + (e && e.message || "unknown"));
     }
     render();
   });
@@ -3908,11 +4056,11 @@ function runOCR(pageId, after){
   getOne("pages", pageId).then(function(p){
     if(!p) return;
     if(p.text){ if(after) after(p.text); return; }
-    toast("ðŸ”¤", "Fetching the text readerâ€¦");
+    toast("🔤", "Fetching the text reader…");
     var worker = null;
     loadScript(OCR_JS).then(function(){
       if(!window.Tesseract) throw new Error("offline");
-      toast("ðŸ”¤", "Reading the page â€” this takes a moment");
+      toast("🔤", "Reading the page — this takes a moment");
       return Tesseract.createWorker("eng");
     }).then(function(w){
       worker = w;
@@ -3942,13 +4090,13 @@ function runOCR(pageId, after){
       return put("pages", p).then(function(){
         if(worker) worker.terminate().catch(function(){});
         if(after) after(p.text);
-        toast(text ? "âœ…" : "ðŸ¤·", text
+        toast(text ? "✅" : "🤷", text
           ? "Read " + words.length + " words off the page"
           : "No text could be made out on that page");
       });
     }).catch(function(e){
       if(worker) try{ worker.terminate(); }catch(e2){}
-      toast(String(e && e.message) === "offline" ? "ðŸ“¡" : "âš ï¸",
+      toast(String(e && e.message) === "offline" ? "📡" : "⚠️",
         String(e && e.message) === "offline"
           ? "Reading text needs the internet the first time"
           : "The text could not be read");
@@ -3964,7 +4112,7 @@ function readPersist(){
 }
 function askPersist(){
   if(!navigator.storage || !navigator.storage.persist){
-    toast("â„¹ï¸", "This browser does not offer to keep files safe");
+    toast("ℹ️", "This browser does not offer to keep files safe");
     return Promise.resolve(null);
   }
   return navigator.storage.persisted().then(function(already){
@@ -3972,9 +4120,9 @@ function askPersist(){
     return navigator.storage.persist();
   }).then(function(ok){
     persistState = !!ok;
-    toast(ok ? "ðŸ”’" : "â„¹ï¸", ok
+    toast(ok ? "🔒" : "ℹ️", ok
       ? "The browser agreed to keep your books"
-      : "The browser said no â€” keep a backup instead");
+      : "The browser said no — keep a backup instead");
     if(tab === "set") render();
     return ok;
   }).catch(function(){ return null; });
@@ -4002,11 +4150,11 @@ function splitIntoPages(text){
 
 function addTextFile(file){
   var fr = new FileReader();
-  setBusy("Reading " + file.name + "â€¦", 10);
-  fr.onerror = function(){ setBusy("", 0); toast("âš ï¸", "That file could not be read"); };
+  setBusy("Reading " + file.name + "…", 10);
+  fr.onerror = function(){ setBusy("", 0); toast("⚠️", "That file could not be read"); };
   fr.onload = function(){
     var raw = String(fr.result || "");
-    if(!raw.trim()){ setBusy("", 0); toast("ðŸ“„", "That file is empty"); return; }
+    if(!raw.trim()){ setBusy("", 0); toast("📄", "That file is empty"); return; }
     var chunks = splitIntoPages(raw);
     var name = file.name.replace(/\.[^.]+$/, "");
     var i = 0, ids = [], bytes = 0, id = uid();
@@ -4025,11 +4173,11 @@ function addTextFile(file){
             created:Date.now(), updated:Date.now(), opened:Date.now()});
         }).then(loadBooks).then(function(){
           setBusy("", 0); tab = "lib"; render(); refreshUsage();
-          toast("ðŸ“„", "â€œ" + name + "â€ added Â· " + ids.length + " page"
+          toast("📄", "“" + name + "” added · " + ids.length + " page"
             + (ids.length===1?"":"s"));
           setTimeout(function(){ openBookSheet(id); }, 220);
         }).catch(function(e){
-          setBusy("", 0); toast("âš ï¸", "Could not save â€” " + (e.message||"storage failed"));
+          setBusy("", 0); toast("⚠️", "Could not save — " + (e.message||"storage failed"));
         });
         return;
       }
@@ -4038,8 +4186,8 @@ function addTextFile(file){
       ids.push(pid);
       put("pages", {id:pid, bookId:id, kind:"text", text:chunks[i],
                     title:"Page " + (i+1), bytes:chunks[i].length, at:Date.now()})
-        .then(function(){ i++; setBusy("Readingâ€¦", (i/chunks.length)*100); step(); })
-        .catch(function(){ setBusy("", 0); toast("âš ï¸", "Ran out of room"); });
+        .then(function(){ i++; setBusy("Reading…", (i/chunks.length)*100); step(); })
+        .catch(function(){ setBusy("", 0); toast("⚠️", "Ran out of room"); });
     })();
   };
   fr.readAsText(file);
@@ -4047,10 +4195,10 @@ function addTextFile(file){
 
 var ZIP_JS = "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
 function addEPUB(file){
-  setBusy("Fetching the EPUB readerâ€¦", 3);
+  setBusy("Fetching the EPUB reader…", 3);
   loadScript(ZIP_JS).then(function(){
     if(!window.JSZip) throw new Error("offline");
-    setBusy("Opening the bookâ€¦", 8);
+    setBusy("Opening the book…", 8);
     return JSZip.loadAsync(file);
   }).then(function(zip){
     return zip.file("META-INF/container.xml").async("string").then(function(cx){
@@ -4100,7 +4248,7 @@ function addEPUB(file){
         }
       }).then(function(){
         i++;
-        setBusy("Reading the EPUBâ€¦ part " + i + " of " + info.order.length,
+        setBusy("Reading the EPUB… part " + i + " of " + info.order.length,
                 (i/info.order.length)*100);
         return step();
       });
@@ -4119,15 +4267,15 @@ function addEPUB(file){
       });
     }).then(loadBooks).then(function(){
       setBusy("", 0); tab = "lib"; render(); refreshUsage();
-      toast("ðŸ“—", "â€œ" + info.title + "â€ added Â· " + ids.length + " part"
+      toast("📗", "“" + info.title + "” added · " + ids.length + " part"
         + (ids.length===1?"":"s"));
     });
   }).catch(function(e){
     setBusy("", 0);
-    toast(String(e && e.message) === "offline" ? "ðŸ“¡" : "âš ï¸",
+    toast(String(e && e.message) === "offline" ? "📡" : "⚠️",
       String(e && e.message) === "offline"
         ? "Opening EPUBs needs the internet the first time"
-        : "That EPUB could not be read â€” " + (e && e.message || "unknown"));
+        : "That EPUB could not be read — " + (e && e.message || "unknown"));
     render();
   });
 }
@@ -4141,7 +4289,7 @@ function addAnyFile(file){
     return addFiles([file]).then(render);
   }
   if(/^video\//.test(file.type) || /\.(mp4|webm|mov|m4v)$/.test(n)) return addVideo(file);
-  toast("âš ï¸", "BookVault cannot read that kind of file");
+  toast("⚠️", "BookVault cannot read that kind of file");
   return Promise.resolve();
 }
 
@@ -4158,19 +4306,19 @@ function openBookSheet(id){
     +   '<div class="stat"><b>' + kb(b.bytes||0) + '</b><span>On disk</span></div>'
     + '</div>'
     + (total
-        ? '<div class="note ok"><span class="ic">âœ…</span><span><b>Ready offline.</b> '
+        ? '<div class="note ok"><span class="ic">✅</span><span><b>Ready offline.</b> '
           + 'All ' + total + ' pages are saved on this device.</span></div>'
-        : '<div class="note warn"><span class="ic">âš ï¸</span><span><b>No pages.</b> '
+        : '<div class="note warn"><span class="ic">⚠️</span><span><b>No pages.</b> '
           + 'This book cannot be read until pages are added.</span></div>')
     + (total ? '<button class="btn" data-act="open-reader" data-id="' + esc(b.id) + '">'
-        + 'ðŸ“– ' + ((b.last||0) > 0 ? 'Carry on from page ' + ((b.last||0)+1) : 'Start reading')
+        + '📖 ' + ((b.last||0) > 0 ? 'Carry on from page ' + ((b.last||0)+1) : 'Start reading')
         + '</button>' : '')
     + (total ? '<button class="btn ghost" data-act="listen" data-id="' + esc(b.id) + '">'
-        + 'ðŸŽ§ ' + (b.listen && b.listen.sent >= 0 && (b.listen.page || b.listen.sent)
-            ? 'Continue listening Â· page ' + ((b.listen.page||0)+1)
+        + '🎧 ' + (b.listen && b.listen.sent >= 0 && (b.listen.page || b.listen.sent)
+            ? 'Continue listening · page ' + ((b.listen.page||0)+1)
             : 'Read it to me') + '</button>' : '')
     + '<button class="btn ghost" data-act="add-to-book" data-id="' + esc(b.id) + '">'
-    +   'âž• Add more pages</button>';
+    +   '➕ Add more pages</button>';
 
   h += '<div class="field"><label>Reading status</label><div class="chips">'
     + [["reading","Reading"],["want","Want to read"],["done","Finished"]].map(function(s){
@@ -4178,7 +4326,7 @@ function openBookSheet(id){
           + '" data-v="' + s[0] + '" aria-pressed="'
           + (b.status===s[0]) + '">' + s[1] + '</button>'; }).join("")
     + '<button class="chip" data-act="b-fav" data-id="' + esc(b.id)
-    + '" aria-pressed="' + !!b.fav + '">â­ Favourite</button>'
+    + '" aria-pressed="' + !!b.fav + '">⭐ Favourite</button>'
     + '</div></div>';
 
   var tagSet = {};
@@ -4200,7 +4348,7 @@ function openBookSheet(id){
             return '<button class="chip tiny" data-act="b-shelf" data-id="' + esc(b.id)
               + '" data-v="' + esc(s) + '" aria-pressed="'
               + ((b.shelves||[]).indexOf(s) >= 0) + '">' + esc(s) + '</button>'; }).join("")
-        : '<span class="hint">No shelves yet â€” make one on the Shelves screen.</span>')
+        : '<span class="hint">No shelves yet — make one on the Shelves screen.</span>')
     + '</div></div>';
 
   h += '<div class="field"><label for="bNotes">Your notes about this book</label>'
@@ -4232,7 +4380,7 @@ function openBookSheet(id){
     + '" style="margin-top:8px">Save</button></div>';
 
   h += '<button class="btn ghost" data-act="del-book" data-id="' + esc(b.id) + '" '
-    + 'style="margin-top:18px">ðŸ—‘ Delete this book</button>'
+    + 'style="margin-top:18px">🗑 Delete this book</button>'
     + '<button class="btn quiet" data-act="close-sheet">Close</button>';
   openSheet(h);
 }
@@ -4270,7 +4418,7 @@ function deleteBook(id, btn){
   var b = book(id);
   if(!b) return;
   var total = (b.pages||[]).length;
-  arm(btn, "Tap again â€” deletes " + total + " page" + (total===1?"":"s"), function(){
+  arm(btn, "Tap again — deletes " + total + " page" + (total===1?"":"s"), function(){
     pageKeysOf(id).catch(function(){ return null; }).then(function(owned){
       var map = {};
       (b.pages||[]).forEach(function(x){ map[x] = 1; });
@@ -4283,13 +4431,13 @@ function deleteBook(id, btn){
         if(i >= ids.length){
           delOne("books", id).then(loadBooks).then(function(){
             closeSheet(); render(); refreshUsage();
-            toast(lost ? "âš ï¸" : "ðŸ—‘", lost
-              ? "â€œ" + (b.title||"Untitled") + "â€ deleted, but " + lost + " page"
+            toast(lost ? "⚠️" : "🗑", lost
+              ? "“" + (b.title||"Untitled") + "” deleted, but " + lost + " page"
                 + (lost===1?"":"s") + " would not delete"
-              : "â€œ" + (b.title||"Untitled") + "â€ deleted");
+              : "“" + (b.title||"Untitled") + "” deleted");
           }).catch(function(){
             render();
-            toast("âš ï¸", "Its pages went, but the book itself would not delete");
+            toast("⚠️", "Its pages went, but the book itself would not delete");
           });
           return;
         }
@@ -4367,7 +4515,7 @@ function exportLibrary(withPages){
   var out = {app:"BookVault", version:APP_VERSION, at:Date.now(),
              withPages:!!withPages, settings:S, books:[]};
   setBusy("", 0);
-  toast("ðŸ“¦", withPages ? "Packing everything upâ€¦" : "Packing the detailsâ€¦");
+  toast("📦", withPages ? "Packing everything up…" : "Packing the details…");
   var missed = 0;
   var i = 0;
   var notesFailed = false;
@@ -4377,21 +4525,21 @@ function exportLibrary(withPages){
     out.notesIncluded = (out.notes || []).length;
     var ok = saveFile("bookvault-" + (withPages ? "full-" : "details-")
       + new Date().toISOString().slice(0,10) + ".json", JSON.stringify(out));
-    if(!ok){ toast("âš ï¸", "The backup could not be made"); return; }
+    if(!ok){ toast("⚠️", "The backup could not be made"); return; }
     S.backupAt = Date.now();
     S.backupWhat = (withPages ? "everything, " : "details only, ")
       + out.books.length + " book" + (out.books.length===1?"":"s")
       + ", " + out.notesIncluded + " note" + (out.notesIncluded===1?"":"s")
       + (missed ? ", " + missed + " page" + (missed===1?"":"s") + " missing" : "");
     var bad = missed || notesFailed;
-    toast(bad ? "âš ï¸" : "ðŸ“¦",
+    toast(bad ? "⚠️" : "📦",
       notesFailed
-        ? "Sent to your downloads, but your NOTES could not be read â€” they are "
+        ? "Sent to your downloads, but your NOTES could not be read — they are "
           + "not in this file"
         : (missed
             ? "Sent to your downloads, but " + missed + " page" + (missed===1?"":"s")
-              + " could not be read â€” this is NOT a complete copy"
-            : "Backup sent to your downloads â€” " + out.books.length + " book"
+              + " could not be read — this is NOT a complete copy"
+            : "Backup sent to your downloads — " + out.books.length + " book"
               + (out.books.length===1?"":"s") + ", " + out.notesIncluded + " note"
               + (out.notesIncluded===1?"":"s") + ". Check it arrived."));
   }
@@ -4424,7 +4572,7 @@ function exportLibrary(withPages){
         if(j >= order.length){
           copy.pageData = blobs;
           out.books.push(copy); i++;
-          toast("ðŸ“¦", "Packingâ€¦ book " + i + " of " + BOOKS.length);
+          toast("📦", "Packing… book " + i + " of " + BOOKS.length);
           return step();
         }
         var p = byId[order[j]];
@@ -4449,9 +4597,9 @@ function importLibrary(file){
   fr.onload = function(){
     var data;
     try{ data = JSON.parse(fr.result); }
-    catch(e){ toast("âš ï¸", "That file is not a BookVault backup"); return; }
+    catch(e){ toast("⚠️", "That file is not a BookVault backup"); return; }
     if(!data || data.app !== "BookVault" || !Array.isArray(data.books)){
-      toast("âš ï¸", "That file is not a BookVault backup"); return;
+      toast("⚠️", "That file is not a BookVault backup"); return;
     }
     var plan = [], junkBooks = 0, junkPages = 0;
     data.books.forEach(function(src){
@@ -4475,8 +4623,8 @@ function importLibrary(file){
     });
     var noteCount = Array.isArray(data.notes) ? data.notes.length : 0;
     if(!plan.length && !noteCount){
-      toast("âš ï¸", (junkBooks || junkPages)
-        ? "Nothing in that file could be read as a book â€” your library is untouched"
+      toast("⚠️", (junkBooks || junkPages)
+        ? "Nothing in that file could be read as a book — your library is untouched"
         : "That backup has no books in it");
       return;
     }
@@ -4487,13 +4635,13 @@ function importLibrary(file){
 
     keysOf("pages").catch(function(){ return null; }).then(function(keys){
       if(!keys){
-        toast("âš ï¸", "Could not read this device's storage â€” nothing was changed");
+        toast("⚠️", "Could not read this device's storage — nothing was changed");
         return;
       }
       var taken = {};
       keys.forEach(function(k){ taken[k] = 1; });
-      toast("ðŸ“¥", "Loading " + plan.length + " book"
-        + (plan.length===1?"":"s") + "â€¦");
+      toast("📥", "Loading " + plan.length + " book"
+        + (plan.length===1?"":"s") + "…");
 
       function finish(){
         var tookSettings = restoreSettings();
@@ -4516,7 +4664,7 @@ function importLibrary(file){
           if(deadBooks) bits.push(deadBooks + " book" + (deadBooks===1?"":"s") + " failed");
           if(notesLost) bits.push(notesLost + " note"
             + (notesLost===1?"":"s") + " could not be saved");
-          toast((deadPages || deadBooks || full || notesLost) ? "âš ï¸" : "âœ…",
+          toast((deadPages || deadBooks || full || notesLost) ? "⚠️" : "✅",
             (full ? "Ran out of room, stopped early. " : "")
             + added + " book" + (added===1?"":"s") + " added"
             + (bits.length ? ", " + bits.join(", ") : ""));
@@ -4691,7 +4839,7 @@ function importLibrary(file){
       step();
     });
   };
-  fr.onerror = function(){ toast("âš ï¸", "That file could not be read"); };
+  fr.onerror = function(){ toast("⚠️", "That file could not be read"); };
   fr.readAsText(file);
 }
 
@@ -4794,16 +4942,16 @@ function fixCounts(){
       return saveBook(b).then(function(){ fixed++; }).catch(function(){ failedFix++; }).then(one);
     })();
   }).then(loadBooks).then(function(){
-    toast((failedFix ? "âš ï¸" : (fixed ? "âœ…" : "ðŸ‘")), failedFix
+    toast((failedFix ? "⚠️" : (fixed ? "✅" : "👍")), failedFix
       ? "Put " + fixed + " right, but " + failedFix + " book"
         + (failedFix===1?"":"s") + " could not be saved"
       : (fixed
           ? "Put " + fixed + " book" + (fixed===1?"":"s")
-            + " right â€” no pages were deleted"
+            + " right — no pages were deleted"
           : "Nothing needed changing"));
     return checkLibrary();
   }).catch(function(){
-    toast("âš ï¸", "Could not finish the repair â€” nothing was changed");
+    toast("⚠️", "Could not finish the repair — nothing was changed");
   });
 }
 
@@ -4812,7 +4960,7 @@ function deleteOrphans(){
   var list = health.orphans.slice(), k = 0, gone = 0, kept = 0;
   (function one(){
     if(k >= list.length){
-      toast(kept ? "âš ï¸" : "ðŸ§¹", "Removed " + gone + " page"
+      toast(kept ? "⚠️" : "🧹", "Removed " + gone + " page"
         + (gone===1?"":"s") + " nothing pointed at"
         + (kept ? ", " + kept + " would not delete" : ""));
       refreshUsage().then(checkLibrary);
@@ -4868,7 +5016,7 @@ function wireCrop(){
 function doCrop(){
   var p = draft.pages[crop.i], box = crop.box;
   if(!p){ closeSheet(); return; }
-  if(!box || box.w < 12 || box.h < 12){ toast("âœ‚ï¸", "Drag a box first"); return; }
+  if(!box || box.w < 12 || box.h < 12){ toast("✂️", "Drag a box first"); return; }
   getOne("pages", p.id).then(function(rec){
     if(!rec) return;
     var url = URL.createObjectURL(rec.blob);
@@ -4888,11 +5036,11 @@ function doCrop(){
           forgetURL(rec.id);
           p.bytes = blob.size; p.hash = rec.hash; p.sharp = rec.sharp;
           closeSheet(); render();
-          toast("âœ‚ï¸", "Page " + (crop.i+1) + " cropped");
+          toast("✂️", "Page " + (crop.i+1) + " cropped");
         });
       });
     });
-  }).catch(function(){ toast("âš ï¸", "That page could not be cropped"); });
+  }).catch(function(){ toast("⚠️", "That page could not be cropped"); });
 }
 
 var listenEl = document.getElementById("listen");
@@ -4987,7 +5135,7 @@ function paintReadSet(){
   function step(act, label, value){
     return '<div class="rs-row" style="margin-top:8px"><span class="nm">' + label + '</span>'
       + '<span class="rs-step">'
-      + '<button data-act="' + act + '" data-v="-1" aria-label="less ' + label + '">âˆ’</button>'
+      + '<button data-act="' + act + '" data-v="-1" aria-label="less ' + label + '">−</button>'
       + '<b>' + value + '</b>'
       + '<button data-act="' + act + '" data-v="1" aria-label="more ' + label + '">+</button>'
       + '</span></div>';
@@ -5020,6 +5168,146 @@ function paintReadSet(){
 
 var HLSEL = null;
 function bookHL(b){ return (b && b.hl) || []; }
+
+var RWORDS = null;
+
+function paintPageWords(){
+  var layer = document.getElementById("rdMarks");
+  if(!layer) return;
+  var b = curBook();
+  if(!b || !RWORDS || !RWORDS.length){ layer.innerHTML = ""; return; }
+  var html = "";
+  for(var i = 0; i < RWORDS.length; i++){
+    var w = RWORDS[i];
+    html += '<span class="pk" data-wi="' + i + '" style="left:' + (w.x*100).toFixed(2)
+      + '%;top:' + (w.y*100).toFixed(2) + '%;width:' + (w.w*100).toFixed(2)
+      + '%;height:' + (w.h*100).toFixed(2) + '%"></span>';
+  }
+  bookHL(b).filter(function(x){ return x.p === R.idx; }).forEach(function(x){
+    var run = findWordRun(RWORDS, x.t);
+    if(!run) return;
+    for(var k = run.from; k <= run.to; k++){
+      var ww = RWORDS[k];
+      html += '<span class="sv ' + (x.c || "y") + '" style="left:' + (ww.x*100).toFixed(2)
+        + '%;top:' + (ww.y*100).toFixed(2) + '%;width:' + (ww.w*100).toFixed(2)
+        + '%;height:' + (ww.h*100).toFixed(2) + '%"></span>';
+    }
+  });
+  layer.innerHTML = html;
+}
+
+function findWordRun(words, text){
+  var want = String(text||"").replace(/\s+/g, " ").trim().toLowerCase();
+  if(!want) return null;
+  for(var i = 0; i < words.length; i++){
+    var acc = "";
+    for(var j = i; j < words.length; j++){
+      acc += (acc ? " " : "") + String(words[j].t||"").toLowerCase();
+      if(acc === want) return {from:i, to:j};
+      if(acc.length > want.length) break;
+    }
+  }
+  return null;
+}
+
+function wordsInDrag(rect){
+  var layer = document.getElementById("rdMarks");
+  if(!layer || !RWORDS) return null;
+  var first = -1, last = -1;
+  var boxes = layer.querySelectorAll(".pk");
+  Array.prototype.forEach.call(boxes, function(el){
+    var r = el.getBoundingClientRect();
+    if(r.right < rect.left || r.left > rect.right
+       || r.bottom < rect.top || r.top > rect.bottom) return;
+    var i = +el.dataset.wi;
+    if(first < 0 || i < first) first = i;
+    if(i > last) last = i;
+  });
+  if(first < 0) return null;
+  var out = [];
+  for(var k = first; k <= last; k++) out.push(RWORDS[k].t);
+  return {from:first, to:last, text:out.join(" ").replace(/\s+/g, " ").trim()};
+}
+
+function setHLMode(on){
+  R.hlMode = !!on;
+  readerEl.classList.toggle("hlmode", R.hlMode);
+  var btn = document.getElementById("rdHLBtn");
+  if(btn) btn.setAttribute("aria-pressed", String(R.hlMode));
+  var bar = document.getElementById("hlbar");
+  if(bar && !R.hlMode) bar.classList.remove("on");
+  var hint = document.getElementById("hlHint");
+  if(hint) hint.classList.toggle("on", R.hlMode);
+  if(!R.hlMode){ HLSEL = null; }
+  Array.prototype.forEach.call(
+    document.querySelectorAll("#rdMarks .pk.on"),
+    function(el){ el.classList.remove("on"); });
+}
+
+(function(){
+  var dragging = false, x0 = 0, y0 = 0;
+  function box(){ return document.getElementById("rdDrag"); }
+  function at(e){
+    var t = e.touches && e.touches[0] ? e.touches[0] : e;
+    return {x:t.clientX, y:t.clientY};
+  }
+  function down(e){
+    if(!R.hlMode || readerEl.hidden) return;
+    var stage = document.getElementById("rdStage");
+    if(!stage || !stage.contains(e.target)) return;
+    var p = at(e);
+    dragging = true; x0 = p.x; y0 = p.y;
+    var d = box();
+    if(d){ d.style.display = "block"; d.style.left = p.x + "px"; d.style.top = p.y + "px";
+           d.style.width = "0px"; d.style.height = "0px"; }
+    e.preventDefault();
+  }
+  function move(e){
+    if(!dragging) return;
+    var p = at(e);
+    var d = box();
+    if(d){
+      d.style.left = Math.min(x0, p.x) + "px";
+      d.style.top = Math.min(y0, p.y) + "px";
+      d.style.width = Math.abs(p.x - x0) + "px";
+      d.style.height = Math.abs(p.y - y0) + "px";
+    }
+    e.preventDefault();
+  }
+  function up(e){
+    if(!dragging) return;
+    dragging = false;
+    var d = box();
+    if(d) d.style.display = "none";
+    var p = at(e.changedTouches ? {touches:e.changedTouches} : e);
+    var rect = {left:Math.min(x0, p.x), right:Math.max(x0, p.x),
+                top:Math.min(y0, p.y), bottom:Math.max(y0, p.y)};
+    if(rect.right - rect.left < 6 && rect.bottom - rect.top < 6) return;
+    var hit = wordsInDrag(rect);
+    if(!hit || !hit.text){ toast("🖍", "No recognised words in there"); return; }
+    HLSEL = hit.text;
+    Array.prototype.forEach.call(
+      document.querySelectorAll("#rdMarks .pk"), function(el){
+        var i = +el.dataset.wi;
+        el.classList.toggle("on", i >= hit.from && i <= hit.to);
+      });
+    var bar = document.getElementById("hlbar");
+    if(bar){
+      bar.classList.add("on");
+      var w = bar.offsetWidth || 230;
+      var left = Math.max(10, Math.min(window.innerWidth - w - 10,
+        (rect.left + rect.right)/2 - w/2));
+      bar.style.left = left + "px";
+      bar.style.top = Math.max(60, rect.top - 54) + "px";
+    }
+  }
+  document.addEventListener("mousedown", down);
+  document.addEventListener("mousemove", move);
+  document.addEventListener("mouseup", up);
+  document.addEventListener("touchstart", down, {passive:false});
+  document.addEventListener("touchmove", move, {passive:false});
+  document.addEventListener("touchend", up);
+})();
 function applyHighlights(host, b, pageIdx){
   var list = bookHL(b).filter(function(x){ return x.p === pageIdx; });
   if(!list.length || !host) return;
@@ -5118,9 +5406,9 @@ function openListen(bookId, startPage){
   var b = book(bookId);
   if(!b) return;
   if(!ttsOK()){
-    openSheet('<h2>ðŸŽ§ This browser cannot speak</h2>'
+    openSheet('<h2>🎧 This browser cannot speak</h2>'
       + '<p class="sub">Reading aloud uses a voice built into the browser, and this '
-      + 'one does not offer it. Nothing else is affected â€” the book still reads '
+      + 'one does not offer it. Nothing else is affected — the book still reads '
       + 'normally.</p><button class="btn" data-act="close-sheet">OK</button>');
     return;
   }
@@ -5159,7 +5447,7 @@ function loadPageText(pi){
   if(pi < 0 || pi >= (b.pages||[]).length){
     L.playing = false;
     paintPlayer();
-    toast("ðŸŽ§", "That is the end of the book");
+    toast("🎧", "That is the end of the book");
     return;
   }
   L.page = pi;
@@ -5193,8 +5481,8 @@ function paintPlayer(){
     playerEl.className = "mini";
     playerEl.innerHTML = '<div class="pl-row">'
       + '<button class="pl-b go" data-act="ls-play" aria-label="'
-      +   (L.playing ? "Pause" : "Play") + '">' + (L.playing ? "â¸" : "â–¶") + '</button>'
-      + '<button class="pl-b" data-act="ls-big" aria-label="Show the player">âŒƒ</button>'
+      +   (L.playing ? "Pause" : "Play") + '">' + (L.playing ? "⏸" : "▶") + '</button>'
+      + '<button class="pl-b" data-act="ls-big" aria-label="Show the player">⌃</button>'
       + '</div>';
     return;
   }
@@ -5202,43 +5490,43 @@ function paintPlayer(){
   playerEl.innerHTML =
       '<div class="pl-head">'
     +   '<span class="pl-where">' + (noText
-          ? "Page " + (L.page+1) + " Â· no text yet"
-          : "Page " + (L.page+1) + " of " + total + " Â· sentence " + (L.sent+1)
+          ? "Page " + (L.page+1) + " · no text yet"
+          : "Page " + (L.page+1) + " of " + total + " · sentence " + (L.sent+1)
             + " of " + L.sents.length
-            + (L.timer ? " Â· ðŸ’¤ " + Math.max(1, Math.round((L.timer-Date.now())/60000)) + "m" : ""))
+            + (L.timer ? " · 💤 " + Math.max(1, Math.round((L.timer-Date.now())/60000)) + "m" : ""))
     +   '</span>'
-    +   '<button class="pl-x" data-act="ls-mini" aria-label="Shrink the player">âŒ„</button>'
-    +   '<button class="pl-x" data-act="ls-close" aria-label="Stop reading aloud">âœ•</button>'
+    +   '<button class="pl-x" data-act="ls-mini" aria-label="Shrink the player">⌄</button>'
+    +   '<button class="pl-x" data-act="ls-close" aria-label="Stop reading aloud">✕</button>'
     + '</div>'
     + (noText
         ? '<p class="hint" style="margin:0 0 10px">This page is a photograph, so there '
           + 'are no words in it to say out loud yet. Recognising them needs the '
           + 'internet the first time.</p>'
           + '<div class="pl-row pl-full">'
-          + '<button class="btn sm" data-act="ls-ocr">ðŸ”¤ Read this page</button>'
+          + '<button class="btn sm" data-act="ls-ocr">🔤 Read this page</button>'
           + '<button class="btn ghost sm" data-act="ls-next-page">Skip</button></div>'
         : '<div class="pl-row">'
           + '<button class="pl-b" data-act="ls-prev-page" aria-label="Previous page"'
-          +   (L.page <= 0 ? " disabled" : "") + '>â®</button>'
-          + '<button class="pl-b" data-act="ls-back" aria-label="Back a sentence">âª</button>'
+          +   (L.page <= 0 ? " disabled" : "") + '>⏮</button>'
+          + '<button class="pl-b" data-act="ls-back" aria-label="Back a sentence">⏪</button>'
           + '<button class="pl-b go" data-act="ls-play" aria-label="'
-          +   (L.playing ? "Pause" : "Play") + '">' + (L.playing ? "â¸" : "â–¶") + '</button>'
-          + '<button class="pl-b" data-act="ls-fwd" aria-label="Forward a sentence">â©</button>'
+          +   (L.playing ? "Pause" : "Play") + '">' + (L.playing ? "⏸" : "▶") + '</button>'
+          + '<button class="pl-b" data-act="ls-fwd" aria-label="Forward a sentence">⏩</button>'
           + '<button class="pl-b" data-act="ls-next-page" aria-label="Next page"'
-          +   (L.page >= total-1 ? " disabled" : "") + '>â­</button>'
+          +   (L.page >= total-1 ? " disabled" : "") + '>⏭</button>'
           + '</div>'
           + '<div class="pl-row pl-full" style="margin-top:9px">'
           + '<button class="pl-b" data-act="ls-sleep" aria-pressed="' + (!!L.timer || L.timerMode==="section")
-          +   '" aria-label="Sleep timer">â°</button>'
-          + '<button class="pl-b" data-act="ls-voices" aria-label="Choose a voice">ðŸŽ™ï¸</button>'
-          + '<button class="pl-b" data-act="ls-fix" aria-label="Correct the text">âœï¸</button>'
-          + '<button class="pl-b" data-act="ls-stop" aria-label="Stop">â¹</button>'
+          +   '" aria-label="Sleep timer">⏰</button>'
+          + '<button class="pl-b" data-act="ls-voices" aria-label="Choose a voice">🎙️</button>'
+          + '<button class="pl-b" data-act="ls-fix" aria-label="Correct the text">✏️</button>'
+          + '<button class="pl-b" data-act="ls-stop" aria-label="Stop">⏹</button>'
           + '</div>'
           + '<div class="pl-speed pl-full">'
           + '<span>Slow</span>'
           + '<input id="lsRate" type="range" min="0.5" max="2" step="0.1" value="' + L.rate + '" '
           +   'aria-label="Reading speed">'
-          + '<span style="text-align:right">' + L.rate.toFixed(1) + 'Ã—</span></div>'
+          + '<span style="text-align:right">' + L.rate.toFixed(1) + '×</span></div>'
           + '<div class="pl-meter"><i style="width:' + pcNow + '%"></i></div>'
           + (L.words && L.words.length ? ''
               : '<p class="pl-cap" id="plCap">' + esc(L.sents[L.sent] ? L.sents[L.sent].text : "")
@@ -5257,9 +5545,9 @@ function voiceMenuHTML(){
   function row(v){
     var on = cur && v.voiceURI === cur.voiceURI;
     return '<button data-act="ls-voice-pick" data-v="' + esc(v.voiceURI) + '">'
-      + '<i>' + (on ? "âœ“" : "") + '</i>'
+      + '<i>' + (on ? "✓" : "") + '</i>'
       + '<span>' + esc(v.name) + '<br><span class="vsub">' + esc(v.lang)
-      + (v.localService ? " Â· works offline" : " Â· needs internet") + '</span></span></button>';
+      + (v.localService ? " · works offline" : " · needs internet") + '</span></span></button>';
   }
   return '<div class="pl-voices">'
     + (local.length ? '<div class="vhead">On this device</div>' + local.map(row).join("") : "")
@@ -5272,8 +5560,8 @@ function markSentence(){
   if(where && L.sents.length){
     var b = book(L.id), total = b ? (b.pages||[]).length : 0;
     where.textContent = "Page " + (L.page+1) + " of " + total
-      + " Â· sentence " + (L.sent+1) + " of " + L.sents.length
-      + (L.timer ? " Â· ðŸ’¤ " + Math.max(1, Math.round((L.timer-Date.now())/60000)) + "m" : "");
+      + " · sentence " + (L.sent+1) + " of " + L.sents.length
+      + (L.timer ? " · 💤 " + Math.max(1, Math.round((L.timer-Date.now())/60000)) + "m" : "");
   }
   var meter = playerEl.querySelector(".pl-meter i");
   if(meter && L.sents.length) meter.style.width = Math.round((L.sent+1)/L.sents.length*100) + "%";
@@ -5314,7 +5602,7 @@ function speakCurrent(){
     if(!L.playing) return;
     if(L.timerMode === "section" && L.sent >= L.sents.length - 1){
       L.timerMode = ""; stopSpeaking(); paintPlayer();
-      toast("ðŸ’¤", "Stopped at the end of the page");
+      toast("💤", "Stopped at the end of the page");
       return;
     }
     nextSentence();
@@ -5323,13 +5611,13 @@ function speakCurrent(){
     if(!L.playing) return;
     if(e && (e.error === "interrupted" || e.error === "canceled")) return;
     stopSpeaking(); paintPlayer();
-    toast("âš ï¸", "The voice stopped working");
+    toast("⚠️", "The voice stopped working");
   };
   utter = u;
   markSentence();
   saveListen(false);
   try{ speechSynthesis.speak(u); }
-  catch(err){ stopSpeaking(); paintPlayer(); toast("âš ï¸", "That voice would not start"); }
+  catch(err){ stopSpeaking(); paintPlayer(); toast("⚠️", "That voice would not start"); }
 }
 function nextSentence(){
   if(L.sent < L.sents.length - 1){ L.sent++; speakCurrent(); return; }
@@ -5337,7 +5625,7 @@ function nextSentence(){
   if(!b) return;
   if(L.page >= (b.pages||[]).length - 1){
     stopSpeaking(); L.sent = Math.max(0, L.sents.length-1); paintPlayer();
-    toast("ðŸŽ§", "That is the end of the book");
+    toast("🎧", "That is the end of the book");
     return;
   }
   L.sent = 0;
@@ -5357,7 +5645,7 @@ setInterval(function(){
   if(!L.timer) return;
   if(Date.now() >= L.timer){
     L.timer = 0;
-    if(L.playing){ stopSpeaking(); paintPlayer(); toast("ðŸ’¤", "Sleep timer â€” stopped"); }
+    if(L.playing){ stopSpeaking(); paintPlayer(); toast("💤", "Sleep timer — stopped"); }
   }
 }, 1000);
 
@@ -5372,7 +5660,7 @@ document.addEventListener("click", function(e){
   else if(act === "open-reader"){ closeSheet(); openReader(id); }
   else if(act === "open-at"){ closeSheet(); openReader(id, +b.dataset.p); }
   else if(act === "set-goal"){
-    openSheet('<h2>ðŸŽ¯ Your reading goals</h2>'
+    openSheet('<h2>🎯 Your reading goals</h2>'
       + '<p class="sub">Yours to pick, and yours to change. Nothing nags you about them.</p>'
       + '<div class="field"><label for="gName">What should the app call you?</label>'
       + '<input id="gName" type="text" maxlength="24" value="' + esc(S.who||"") + '" '
@@ -5392,7 +5680,7 @@ document.addEventListener("click", function(e){
     if(gb >= 1 && gb <= 999) S.goalBooks = gb;
     if(gp >= 1 && gp <= 99999) S.monthPages = gp;
     saveSettings(); closeSheet(); render();
-    toast("ðŸŽ¯", "Goals saved");
+    toast("🎯", "Goals saved");
   }
   else if(act === "clear-filters"){ S.filter = "all"; S.q = ""; saveSettings(); render(); }
   else if(act === "tag-search"){ S.q = id; S.filter = "all"; saveSettings(); go("lib"); }
@@ -5408,7 +5696,7 @@ document.addEventListener("click", function(e){
     pickOne(".pdf,.epub,.txt,.md,application/pdf,application/epub+zip,text/plain", addAnyFile);
   }
   else if(act === "keep-safe"){ askPersist(); }
-  else if(act === "cancel-job"){ job.stop = true; toast("âœ‹", "Stoppingâ€¦"); }
+  else if(act === "cancel-job"){ job.stop = true; toast("✋", "Stopping…"); }
   else if(act === "clear-draft"){
     arm(b, "Tap again to remove all " + draft.pages.length, function(){
       draft.pages.forEach(function(p){ forgetURL(p.id); delOne("pages", p.id); });
@@ -5513,15 +5801,15 @@ document.addEventListener("click", function(e){
   else if(act === "b-notes"){
     var bn = book(id); if(!bn) return;
     bn.notes = (document.getElementById("bNotes")||{}).value || "";
-    saveBook(bn).then(function(){ toast("âœ…", "Notes saved"); });
+    saveBook(bn).then(function(){ toast("✅", "Notes saved"); });
   }
   else if(act === "b-rename"){
     var br = book(id); if(!br) return;
     var nt = ((document.getElementById("bTitle")||{}).value || "").trim();
-    if(!nt){ toast("âœï¸", "A book needs a title"); return; }
+    if(!nt){ toast("✏️", "A book needs a title"); return; }
     br.title = nt;
     br.author = ((document.getElementById("bAuthor")||{}).value || "").trim();
-    saveBook(br).then(function(){ openBookSheet(id); render(); toast("âœ…", "Saved"); });
+    saveBook(br).then(function(){ openBookSheet(id); render(); toast("✅", "Saved"); });
   }
   else if(act === "del-book"){ deleteBook(id, b); }
 
@@ -5529,21 +5817,21 @@ document.addEventListener("click", function(e){
     openSheet('<h2>New shelf</h2><p class="sub">A shelf is just a name you can '
       + 'put books on.</p>'
       + '<div class="field"><label for="shName">What is it called?</label>'
-      + '<input id="shName" type="text" maxlength="30" placeholder="School, Holiday, Comicsâ€¦">'
+      + '<input id="shName" type="text" maxlength="30" placeholder="School, Holiday, Comics…">'
       + '</div><button class="btn" data-act="new-shelf-go">Make it</button>'
       + '<button class="btn quiet" data-act="close-sheet">Cancel</button>',
       function(){ var el = document.getElementById("shName"); if(el) el.focus(); });
   }
   else if(act === "new-shelf-go"){
     var nm = ((document.getElementById("shName")||{}).value || "").trim();
-    if(!nm){ toast("âœï¸", "Give it a name"); return; }
+    if(!nm){ toast("✏️", "Give it a name"); return; }
     S.shelves = S.shelves || [];
     if(S.shelves.indexOf(nm) < 0) S.shelves.push(nm);
     var kept = saveSettings();
     closeSheet(); render();
-    toast(kept ? "ðŸ—‚ï¸" : "âš ï¸", kept
-      ? "â€œ" + nm + "â€ added"
-      : "â€œ" + nm + "â€ is here for now, but this browser would not save it â€” "
+    toast(kept ? "🗂️" : "⚠️", kept
+      ? "“" + nm + "” added"
+      : "“" + nm + "” is here for now, but this browser would not save it — "
         + "it will be gone when you reload");
   }
   else if(act === "ren-shelf"){
@@ -5562,10 +5850,10 @@ document.addEventListener("click", function(e){
   else if(act === "ren-shelf-go"){
     var oldN = (document.getElementById("shOld")||{}).value || "";
     var newN = (((document.getElementById("shNew")||{}).value) || "").trim();
-    if(!newN){ toast("âœï¸", "Give it a name"); return; }
+    if(!newN){ toast("✏️", "Give it a name"); return; }
     if(newN === oldN){ closeSheet(); return; }
     if(allShelves().indexOf(newN) >= 0){
-      toast("âš ï¸", "There is already a shelf called â€œ" + newN + "â€");
+      toast("⚠️", "There is already a shelf called “" + newN + "”");
       return;
     }
     S.shelves = (S.shelves||[]).map(function(s){ return s === oldN ? newN : s; });
@@ -5577,10 +5865,10 @@ document.addEventListener("click", function(e){
       if(k >= onIt.length){
         loadBooks().then(function(){
           closeSheet(); render();
-          toast(missed ? "âš ï¸" : "ðŸ—‚ï¸", missed
+          toast(missed ? "⚠️" : "🗂️", missed
             ? "Renamed, but " + missed + " book" + (missed===1?"":"s")
-              + " could not be updated â€” check the shelf"
-            : "Renamed to â€œ" + newN + "â€ â€” " + onIt.length + " book"
+              + " could not be updated — check the shelf"
+            : "Renamed to “" + newN + "” — " + onIt.length + " book"
               + (onIt.length===1?"":"s") + " came with it");
         });
         return;
@@ -5601,10 +5889,10 @@ document.addEventListener("click", function(e){
         if(k >= left.length){
           loadBooks().then(function(){
             render();
-            toast(missed ? "âš ï¸" : "ðŸ—‚ï¸", missed
+            toast(missed ? "⚠️" : "🗂️", missed
               ? "Removed, but " + missed + " book" + (missed===1?"":"s")
-                + " could not be updated â€” the shelf may come back"
-              : "Shelf removed â€” the books are still here");
+                + " could not be updated — the shelf may come back"
+              : "Shelf removed — the books are still here");
           });
           return;
         }
@@ -5622,7 +5910,7 @@ document.addEventListener("click", function(e){
   else if(act === "check-lib"){ checkLibrary(); }
   else if(act === "fix-counts"){ fixCounts(); }
   else if(act === "del-orphans"){
-    arm(b, "Tap again â€” deletes " + (health ? health.orphans.length : 0) + " pages",
+    arm(b, "Tap again — deletes " + (health ? health.orphans.length : 0) + " pages",
       deleteOrphans);
   }
   else if(act === "export-meta"){ exportLibrary(false); }
@@ -5643,11 +5931,11 @@ document.addEventListener("click", function(e){
   else if(act === "rd-zoom-out"){ R.zoom = Math.max(0.3, R.zoom / 1.3); sizePage(); }
   else if(act === "rd-fit"){
     R.fit = R.fit === "width" ? "screen" : "width"; R.zoom = 1; sizePage();
-    toast("â†”", R.fit === "width" ? "Fitting the width" : "Fitting the screen");
+    toast("↔", R.fit === "width" ? "Fitting the width" : "Fitting the screen");
   }
   else if(act === "rd-bare"){
     R.bare = !R.bare; readerEl.classList.toggle("bare", R.bare);
-    if(R.bare) toast("ðŸ‘", "Tap the middle of the page to bring the buttons back");
+    if(R.bare) toast("👁", "Tap the middle of the page to bring the buttons back");
   }
   else if(act === "rd-set"){
     var rs = document.getElementById("rset");
@@ -5675,19 +5963,19 @@ document.addEventListener("click", function(e){
   }
   else if(act === "rs-reset"){
     S.rd = null; readPrefs(); saveSettings(); applyReadPrefs(); paintReadSet();
-    toast("â†©", "Back to how it was");
+    toast("↩", "Back to how it was");
   }
   else if(act === "rd-bg"){
     var order = ["light","sepia","dark","black"];
     S.bg = order[(order.indexOf(S.bg) + 1) % order.length];
     saveSettings(); readerEl.setAttribute("data-bg", S.bg);
-    toast("â—", S.bg);
+    toast("◐", S.bg);
   }
   else if(act === "rd-full"){
     try{
       if(document.fullscreenElement) document.exitFullscreen();
       else readerEl.requestFullscreen();
-    }catch(err){ toast("â›¶", "This browser will not go full screen"); }
+    }catch(err){ toast("⛶", "This browser will not go full screen"); }
   }
   else if(act === "rd-rot"){
     var pid = R.pages[R.idx];
@@ -5710,15 +5998,15 @@ document.addEventListener("click", function(e){
   }
   else if(act === "rd-jump-go"){
     var v = parseInt((document.getElementById("jumpTo")||{}).value, 10);
-    if(!(v >= 1 && v <= R.pages.length)){ toast("ðŸ”¢", "No such page"); return; }
+    if(!(v >= 1 && v <= R.pages.length)){ toast("🔢", "No such page"); return; }
     closeSheet(); rdAt(v-1);
   }
   else if(act === "rd-mark"){
     var bm = curBook(); if(!bm) return;
     bm.marks = bm.marks || [];
     var at = bm.marks.findIndex(function(m){ return m.p === R.idx; });
-    if(at >= 0){ bm.marks.splice(at, 1); toast("ðŸ”–", "Bookmark removed"); }
-    else { bm.marks.push({p:R.idx, at:Date.now(), note:""}); toast("ðŸ”–", "Page " + (R.idx+1) + " marked"); }
+    if(at >= 0){ bm.marks.splice(at, 1); toast("🔖", "Bookmark removed"); }
+    else { bm.marks.push({p:R.idx, at:Date.now(), note:""}); toast("🔖", "Page " + (R.idx+1) + " marked"); }
     saveBook(bm);
   }
   else if(act === "rd-note"){
@@ -5737,7 +6025,7 @@ document.addEventListener("click", function(e){
     bn3.pageNotes = bn3.pageNotes || {};
     var txt = ((document.getElementById("pgNote")||{}).value || "").trim();
     if(txt) bn3.pageNotes[R.idx] = txt; else delete bn3.pageNotes[R.idx];
-    saveBook(bn3).then(function(){ closeSheet(); toast("ðŸ“", txt ? "Note saved" : "Note removed"); });
+    saveBook(bn3).then(function(){ closeSheet(); toast("📝", txt ? "Note saved" : "Note removed"); });
   }
   else if(act === "rd-ocr"){
     var pid2 = R.pages[R.idx];
@@ -5756,6 +6044,49 @@ document.addEventListener("click", function(e){
     var strip = document.getElementById(id);
     if(strip) slideRow(strip, (act === "row-left" ? -1 : 1) * (strip.clientWidth - 60));
   }
+  else if(act === "hl-copy"){
+    var one = allHighlights()[+b.dataset.i];
+    if(!one) return;
+    copyToClipboard("“" + one.x.t + "”"
+      + (one.x.note ? "\n\nnote: " + one.x.note : "")
+      + "\n\n— " + (one.b.title || "Untitled")
+      + (one.b.author ? ", " + one.b.author : "")
+      + ", " + partLabel(one.b, one.x.p, ""));
+  }
+  else if(act === "hl-copy-all"){
+    var all = highlightsAsText();
+    if(!all.trim()){ toast("🖍", "Nothing highlighted yet"); return; }
+    copyToClipboard(all);
+  }
+  else if(act === "hl-export"){
+    var txt2 = highlightsAsText();
+    if(!txt2.trim()){ toast("🖍", "Nothing highlighted yet"); return; }
+    var okx = saveText("bookvault-highlights-"
+      + new Date().toISOString().slice(0,10) + ".txt", txt2);
+    if(okx) toast("⬇", "Sent to your downloads — check it arrived");
+  }
+  else if(act === "rd-hlmode"){
+    if(R.hlMode){ setHLMode(false); toast("🖍", "Highlighting off"); return; }
+    if(!RWORDS){
+      openSheet('<h2>🖍 Highlighting a photograph</h2>'
+        + '<p class="sub">To highlight words on a photographed page, the app has '
+        + 'to know where the words are. That comes from the 🔤 button, which '
+        + 'reads the words off the picture.</p>'
+        + '<p class="sub">It needs the internet the first time, because it '
+        + 'fetches the tool that does the reading. After that the words are '
+        + 'kept on this device.</p>'
+        + '<button class="btn" data-act="rd-ocr-from-sheet">🔤 Read this page now</button>'
+        + '<button class="btn quiet" data-act="close-sheet">Not now</button>');
+      return;
+    }
+    setHLMode(true);
+    toast("🖍", "Drag across the words you want");
+  }
+  else if(act === "rd-ocr-from-sheet"){
+    closeSheet();
+    var ocrBtn = document.querySelector('[data-act="rd-ocr"]');
+    if(ocrBtn) ocrBtn.click();
+  }
   else if(act === "hl-add"){
     var hb = curBook();
     if(!hb || !HLSEL) return;
@@ -5766,7 +6097,7 @@ document.addEventListener("click", function(e){
       document.getElementById("hlbar").classList.remove("on");
       window.getSelection().removeAllRanges();
       paintReader();
-      toast("ðŸ–", "Highlighted");
+      toast("🖍", "Highlighted");
       checkBadges();
     });
   }
@@ -5779,7 +6110,7 @@ document.addEventListener("click", function(e){
       document.getElementById("hlbar").classList.remove("on");
       window.getSelection().removeAllRanges();
       paintReader();
-      toast("ðŸ–", was > (hc.hl||[]).length ? "Highlight removed" : "That bit was not highlighted");
+      toast("🖍", was > (hc.hl||[]).length ? "Highlight removed" : "That bit was not highlighted");
     });
   }
   else if(act === "hl-note"){
@@ -5788,8 +6119,8 @@ document.addEventListener("click", function(e){
     var keep = HLSEL;
     var found = (hn.hl||[]).filter(function(x){ return x.p === R.idx && x.t === keep; })[0];
     document.getElementById("hlbar").classList.remove("on");
-    openSheet('<h2>ðŸ“ Note on these words</h2>'
-      + '<p class="sub">â€œ' + esc(keep.slice(0,120)) + 'â€</p>'
+    openSheet('<h2>📝 Note on these words</h2>'
+      + '<p class="sub">“' + esc(keep.slice(0,120)) + '”</p>'
       + '<div class="field"><textarea id="hlNote" rows="5" placeholder="What about it?">'
       + esc(found ? (found.note||"") : "") + '</textarea></div>'
       + '<button class="btn" data-act="hl-note-save" data-v="' + esc(keep) + '">Save</button>'
@@ -5805,7 +6136,7 @@ document.addEventListener("click", function(e){
     if(f2) f2.note = txt;
     else hs.hl.push({p:R.idx, t:words2, c:"y", note:txt, at:Date.now()});
     saveBook(hs).then(function(){
-      closeSheet(); paintReader(); toast("ðŸ“", "Note saved on those words");
+      closeSheet(); paintReader(); toast("📝", "Note saved on those words");
     });
   }
 
@@ -5844,7 +6175,7 @@ document.addEventListener("click", function(e){
   else if(act === "w-del-chap"){
     var bd = book(W.book);
     if(!bd) return;
-    if((bd.pages||[]).length <= 1){ toast("ðŸ“„", "A book needs at least one chapter"); return; }
+    if((bd.pages||[]).length <= 1){ toast("📄", "A book needs at least one chapter"); return; }
     arm(b, "Tap again to delete this chapter", function(){
       saveChapterNow().then(function(){
         var gone = W.chap, pid = bd.pages[gone];
@@ -5854,9 +6185,9 @@ document.addEventListener("click", function(e){
         return delOne("pages", pid).catch(function(){}).then(function(){
           return recountBook(bd);
         }).then(function(){
-          render(); toast("ðŸ—‘", "Chapter deleted");
+          render(); toast("🗑", "Chapter deleted");
         }).catch(function(){
-          render(); toast("âš ï¸", "The chapter could not be deleted");
+          render(); toast("⚠️", "The chapter could not be deleted");
         });
       });
     });
@@ -5865,8 +6196,8 @@ document.addEventListener("click", function(e){
     document.documentElement.classList.toggle("focus");
     var fa = document.getElementById("wBody");
     if(fa) fa.focus();
-    toast("ðŸ§˜", document.documentElement.classList.contains("focus")
-      ? "Focus mode â€” press Esc to come back" : "Focus mode off");
+    toast("🧘", document.documentElement.classList.contains("focus")
+      ? "Focus mode — press Esc to come back" : "Focus mode off");
   }
   else if(act === "w-goal"){
     openSheet('<h2>Writing goal</h2><p class="sub">How many words a day are you '
@@ -5880,13 +6211,13 @@ document.addEventListener("click", function(e){
   }
   else if(act === "w-goal-save"){
     var gw = parseInt(((document.getElementById("wGoalIn")||{}).value || "0"), 10);
-    if(isNaN(gw) || gw < 0){ toast("âœï¸", "A number, please"); return; }
+    if(isNaN(gw) || gw < 0){ toast("✏️", "A number, please"); return; }
     S.goalWords = Math.min(100000, gw);
     var keptG = saveSettings();
     closeSheet(); render();
-    toast(keptG ? "ðŸŽ¯" : "âš ï¸", keptG
+    toast(keptG ? "🎯" : "⚠️", keptG
       ? (S.goalWords ? "Aiming for " + n(S.goalWords) + " words a day"
-                     : "Goal turned off â€” still counting")
+                     : "Goal turned off — still counting")
       : "This browser would not save that");
   }
   else if(act === "w-details"){
@@ -5896,7 +6227,7 @@ document.addEventListener("click", function(e){
     bb.author = g("wAuthor"); bb.subtitle = g("wSub");
     bb.genre = g("wGenre"); bb.desc = g("wDesc");
     if(bb.genre && bb.tags.indexOf(bb.genre) < 0) bb.tags = ["Written by me", bb.genre];
-    saveBook(bb).then(function(){ render(); toast("âœ…", "Details saved"); });
+    saveBook(bb).then(function(){ render(); toast("✅", "Details saved"); });
   }
   else if(act === "w-cover"){
     var bc = book(W.book); if(!bc) return;
@@ -5909,7 +6240,7 @@ document.addEventListener("click", function(e){
           bc.cover = cid;
           return saveBook(bc);
         });
-      }).then(function(){ render(); toast("ðŸŽ¨", "Cover made"); });
+      }).then(function(){ render(); toast("🎨", "Cover made"); });
   }
   else if(act === "w-bigger"){ S.wsize = Math.min(28, (S.wsize||16) + 2); saveSettings(); render(); }
   else if(act === "w-smaller"){ S.wsize = Math.max(12, (S.wsize||16) - 2); saveSettings(); render(); }
@@ -5923,13 +6254,13 @@ document.addEventListener("click", function(e){
       return bookToText(bx, md).then(function(txt){
         var safe = (bx.title || "my-book").replace(/[^\w \-]/g, "").trim() || "my-book";
         var ok = saveText(safe + (md ? ".md" : ".txt"), txt);
-        toast(ok ? "â¬‡" : "âš ï¸", ok ? "Saved to your downloads" : "Could not save the file");
+        toast(ok ? "⬇" : "⚠️", ok ? "Saved to your downloads" : "Could not save the file");
       });
     });
   }
   else if(act === "w-del-book"){
     var bk = book(W.book); if(!bk) return;
-    arm(b, "Tap again â€” deletes the whole book", function(){
+    arm(b, "Tap again — deletes the whole book", function(){
       var ids = (bk.pages||[]).slice();
       if(bk.cover) ids.push(bk.cover);
       var k = 0;
@@ -5937,7 +6268,7 @@ document.addEventListener("click", function(e){
         if(k >= ids.length){
           delOne("books", bk.id).then(loadBooks).then(function(){
             W.book = null; render(); refreshUsage();
-            toast("ðŸ—‘", "Book deleted");
+            toast("🗑", "Book deleted");
           });
           return;
         }
@@ -5955,7 +6286,7 @@ document.addEventListener("click", function(e){
     var np = noteById(W.note); if(!np) return;
     np.pinned = !np.pinned; np.updated = Date.now();
     put("notes", np).then(loadNotes).then(function(){ render();
-      toast("ðŸ“Œ", np.pinned ? "Pinned to the top" : "Unpinned"); });
+      toast("📌", np.pinned ? "Pinned to the top" : "Unpinned"); });
   }
   else if(act === "n-bigger"){ S.nsize = Math.min(28, (S.nsize||16) + 2); saveSettings(); render(); }
   else if(act === "n-smaller"){ S.nsize = Math.max(12, (S.nsize||16) - 2); saveSettings(); render(); }
@@ -5964,7 +6295,7 @@ document.addEventListener("click", function(e){
     saveNoteNow().then(function(){
       var safe = (ne.title || "note").replace(/[^\w \-]/g, "").trim() || "note";
       var ok = saveText(safe + ".txt", (ne.title||"") + "\n\n" + (ne.body||""));
-      toast(ok ? "â¬‡" : "âš ï¸", ok ? "Saved to your downloads" : "Could not save");
+      toast(ok ? "⬇" : "⚠️", ok ? "Saved to your downloads" : "Could not save");
     });
   }
   else if(act === "n-del"){
@@ -5973,14 +6304,14 @@ document.addEventListener("click", function(e){
       nd.deletedAt = Date.now();
       put("notes", nd).then(loadNotes).then(function(){
         W.note = null; render();
-        toast("ðŸ—‘", "Deleted â€” you can still bring it back");
+        toast("🗑", "Deleted — you can still bring it back");
       });
     });
   }
   else if(act === "n-restore"){
     var nr = noteById(id); if(!nr) return;
     nr.deletedAt = 0; nr.updated = Date.now();
-    put("notes", nr).then(loadNotes).then(function(){ render(); toast("â†©", "Brought back"); });
+    put("notes", nr).then(loadNotes).then(function(){ render(); toast("↩", "Brought back"); });
   }
 
   else if(act === "d-go"){
@@ -6012,10 +6343,10 @@ document.addEventListener("click", function(e){
     saveListen(false);
     paintPlayer();
     if(L.playing) speakCurrent();
-    else toast("ðŸŽ™ï¸", "Voice changed");
+    else toast("🎙️", "Voice changed");
   }
   else if(act === "ls-play"){
-    if(!L.sents.length){ toast("ðŸ”¤", "There is no text on this page yet"); return; }
+    if(!L.sents.length){ toast("🔤", "There is no text on this page yet"); return; }
     if(L.playing){ stopSpeaking(); paintPlayer(); }
     else {
       L.playing = true;
@@ -6054,7 +6385,7 @@ document.addEventListener("click", function(e){
     var lb3 = book(L.id);
     if(!lb3) return;
     getOne("pages", lb3.pages[L.page]).then(function(p){
-      openSheet('<h2>âœï¸ Correct the text</h2>'
+      openSheet('<h2>✏️ Correct the text</h2>'
         + '<p class="sub">Recognising words off a photograph gets things wrong. '
         + 'Fix anything odd here and the voice will read your version.</p>'
         + '<div class="field"><textarea id="fixText" rows="12">'
@@ -6074,12 +6405,12 @@ document.addEventListener("click", function(e){
         var wasPlaying = L.playing;
         stopSpeaking(); L.sent = 0; L.playing = wasPlaying;
         loadPageText(L.page);
-        toast("âœ…", "Saved â€” the voice will read your version");
+        toast("✅", "Saved — the voice will read your version");
       });
     });
   }
   else if(act === "ls-sleep"){
-    openSheet('<h2>ðŸ’¤ Sleep timer</h2><p class="sub">Stop reading afterâ€¦</p>'
+    openSheet('<h2>💤 Sleep timer</h2><p class="sub">Stop reading after…</p>'
       + '<div class="chips">'
       + [15,30,45,60].map(function(m){
           return '<button class="chip" data-act="ls-sleep-set" data-v="' + m + '">'
@@ -6091,11 +6422,11 @@ document.addEventListener("click", function(e){
   }
   else if(act === "ls-sleep-set"){
     var v = b.dataset.v;
-    if(v === "off"){ L.timer = 0; L.timerMode = ""; toast("ðŸ’¤", "Sleep timer off"); }
+    if(v === "off"){ L.timer = 0; L.timerMode = ""; toast("💤", "Sleep timer off"); }
     else if(v === "section"){ L.timer = 0; L.timerMode = "section";
-      toast("ðŸ’¤", "Will stop at the end of this page"); }
+      toast("💤", "Will stop at the end of this page"); }
     else { L.timer = Date.now() + (+v) * 60000; L.timerMode = "";
-      toast("ðŸ’¤", "Will stop in " + v + " minutes"); }
+      toast("💤", "Will stop in " + v + " minutes"); }
     closeSheet(); paintPlayer();
   }
 
@@ -6103,20 +6434,16 @@ document.addEventListener("click", function(e){
     var ta = document.getElementById("ocrText");
     if(!ta) return;
     ta.select();
-    try{
-      if(navigator.clipboard) navigator.clipboard.writeText(ta.value);
-      else document.execCommand("copy");
-      toast("ðŸ“‹", "Copied");
-    }catch(err){ toast("ðŸ“‹", "Select it and copy by hand"); }
+    copyToClipboard(ta.value);
   }
 });
 
 function showText(text){
   openSheet('<h2>Text on page ' + (R.idx+1) + '</h2>'
     + '<p class="sub">Read off the picture by the computer. It gets things wrong, '
-    + 'especially with small or slanted print â€” the picture is still the real page.</p>'
+    + 'especially with small or slanted print — the picture is still the real page.</p>'
     + '<div class="field"><textarea id="ocrText" rows="12">' + esc(text || "") + '</textarea></div>'
-    + '<button class="btn ghost" data-act="copy-text">ðŸ“‹ Copy it</button>'
+    + '<button class="btn ghost" data-act="copy-text">📋 Copy it</button>'
     + '<button class="btn quiet" data-act="close-sheet">Close</button>');
 }
 
@@ -6206,11 +6533,11 @@ function recoverWriting(){
   return (function step(){
     if(i >= keys.length){
       if(got){
-        toast("ðŸ’¾", got === 1
-          ? "Got your writing back â€” it had not finished saving"
-          : "Got " + got + " pieces of writing back â€” they had not finished saving");
+        toast("💾", got === 1
+          ? "Got your writing back — it had not finished saving"
+          : "Got " + got + " pieces of writing back — they had not finished saving");
       } else if(stuck){
-        toast("âš ï¸", "There is unsaved writing that could not be put back yet");
+        toast("⚠️", "There is unsaved writing that could not be put back yet");
       }
       return Promise.resolve();
     }
@@ -6318,7 +6645,7 @@ document.addEventListener("keydown", function(e){
   var inWriter = !!document.getElementById("wBody");
   if(inWriter && (e.ctrlKey || e.metaKey) && (e.key === "s" || e.key === "S")){
     e.preventDefault();
-    wMark("savingâ€¦");
+    wMark("saving…");
     clearTimeout(W.saveT);
     saveDetailsNow().then(saveChapterNow);
   }
@@ -6330,7 +6657,7 @@ document.addEventListener("keydown", function(e){
   if(e.key === "Escape" && document.documentElement.classList.contains("focus")){
     e.preventDefault();
     document.documentElement.classList.remove("focus");
-    toast("ðŸ§˜", "Focus mode off");
+    toast("🧘", "Focus mode off");
   }
 });
 document.addEventListener("input", function(e){
@@ -6358,10 +6685,10 @@ document.addEventListener("input", function(e){
         var first = (nt.body||"").replace(/\s+/g," ").trim().slice(0,70);
         return '<button class="li" data-act="n-open" data-id="' + esc(nt.id)
           + '" style="grid-template-columns:1fr auto">'
-          + '<span><span class="t">' + (nt.pinned?"ðŸ“Œ ":"")
+          + '<span><span class="t">' + (nt.pinned?"📌 ":"")
           + esc(nt.title||"Untitled note") + '</span>'
           + '<span class="a">' + esc(first||"empty") + '</span></span>'
-          + '<span class="go">â€º</span></button>'; }).join("");
+          + '<span class="go">›</span></button>'; }).join("");
     }
   }
   if(e.target && e.target.id === "dSearch") D.q = e.target.value;
@@ -6394,7 +6721,7 @@ document.addEventListener("input", function(e){
   if(e.target && e.target.id === "lsRate"){
     L.rate = +e.target.value;
     var lbl = e.target.nextElementSibling;
-    if(lbl) lbl.textContent = L.rate.toFixed(1) + "Ã—";
+    if(lbl) lbl.textContent = L.rate.toFixed(1) + "×";
     saveListen(false);
     if(L.playing) speakCurrent();
   }
@@ -6455,7 +6782,8 @@ document.addEventListener("keydown", function(e){
     var t = e.changedTouches && e.changedTouches[0];
     if(!t) return;
     var dx = t.clientX - sx, dy = t.clientY - sy;
-    if(Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.6 && R.zoom <= 1.02){
+    if(Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.6 && R.zoom <= 1.02
+       && !R.hlMode){
       rdGo(dx < 0 ? 1 : -1);
       return;
     }
@@ -6533,17 +6861,17 @@ openDB().then(function(){
 }).then(function(left){
   if(left && left.length){
     draft.pages = left.sort(function(a,b){ return (a.at||0) - (b.at||0); });
-    toast("ðŸ“„", left.length + " page" + (left.length===1?"":"s")
+    toast("📄", left.length + " page" + (left.length===1?"":"s")
       + " from last time are still here");
   }
   askHostSave();
   return Promise.all([refreshUsage(), readPersist(), recoverWriting()]);
 }).then(function(){
   render();
-  if(dbError) toast("âš ï¸", "Storage is blocked â€” nothing can be saved");
+  if(dbError) toast("⚠️", "Storage is blocked — nothing can be saved");
 }).catch(function(e){
   render();
-  toast("âš ï¸", "Something went wrong starting up");
+  toast("⚠️", "Something went wrong starting up");
 });
 
 if("serviceWorker" in navigator && location.protocol !== "file:" && !SELFTEST){
